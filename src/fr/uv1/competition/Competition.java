@@ -42,6 +42,10 @@ public class Competition {
 	public String getName() {
 		return name;
 	}
+	
+	public java.util.Collection<Competitor>  getCompetitors() {
+		return this.competitors;
+	}
 
 	public void setName(String name) throws BadParametersException {
 		if (!Utilitary.isValidName(name)) { throw new BadParametersException("invalid name");}
@@ -86,8 +90,8 @@ public class Competition {
 	}
 	
 	// Returns the list of competitors in this competition
-	public List<Competitor> listCompetitors() {
-		return competitors;
+	public static java.util.Collection<Competitor> listCompetitors(String competition) { // BS
+		return getCompetitionByName(competition).getCompetitors();
 	}
 	
 	// Returns True if the competition is closed, False if it's still running

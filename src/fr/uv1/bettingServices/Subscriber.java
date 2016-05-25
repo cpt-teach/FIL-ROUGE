@@ -340,6 +340,24 @@ public class Subscriber implements Serializable {
 		// Update to the database
 		update();
 	
+	}
+	public static Subscriber getSubscriberByUsername(String username){
+		// STUB TODO By Mahfoudi
+	}
 	
+	void debitSubscriber(java.lang.String username, // BS
+            long numberTokens,
+            java.lang.String managerPwd){
+
+		
+		//TODO By Mahfoudi
+	}
 	
+	void creditSubscriber(java.lang.String username, // BS
+            long numberTokens,
+            java.lang.String managerPwd){
+
+		
+		//TODO By Mahfoudi
+	}
 }
