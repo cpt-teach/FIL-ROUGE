@@ -5,10 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.sql.ResultSet;
 import fr.uv1.utils.MyCalendar;
-import fr.uv1.competition.Exceptions.BadParametersException;
-import fr.uv1.competition.Exceptions.ExistingCompetitionException;
-import fr.uv1.competition.Exceptions.ExistingCompetitorException;
-import fr.uv1.competition.Exceptions.NotATeamException;
+import fr.uv1.competition.Exceptions.*;
 
 
 public class Competition {
@@ -122,7 +119,7 @@ public class Competition {
 	}
 	
 	// Returns the list of competitors in this competition
-	public static java.util.Collection<Competitor> listCompetitors(String competition) { // BS
+	public static java.util.Collection<Competitor> listCompetitors(String competition)throws ExistingCompetitorException, ExistingCompetitionException, CompetitionException, NotATeamException, SQLException, BadParametersException { // BS
 		return getCompetitionByName(competition).getCompetitors();
 	}
 	
