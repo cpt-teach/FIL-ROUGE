@@ -50,6 +50,9 @@ public class Competition {
 	public String getSport() {
 		return sport;
 	}
+	public void setSport(String sport){
+		this.sport=sport;
+	}
 
 	public static Competition getCompetitionByName(String Competition_name)throws SQLException, BadParametersException, ExistingCompetitorException, ExistingCompetitionException,NotATeamException{ // TODO in DAO
 		Competition competition = null;
