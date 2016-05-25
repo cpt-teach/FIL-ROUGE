@@ -1,4 +1,4 @@
-package Competition;
+package fr.uv1.competition;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,12 +15,12 @@ public class CompetitionDAO {
 	}
 	
 	public static void addCompetition(Competition competition) throws ExistingCompetitionException {
-		if (currentCompetitions.contains(competition)){ throw new ExistingCompetitionException();	}
+		if (currentCompetitions.contains(competition)){ throw new ExistingCompetitionException("Competition already exists");	}
 		else { currentCompetitions.add(competition); }
 	}
 	
 	public static void cancelCompetition(Competition competition) throws ExistingCompetitionException {
-		if (! currentCompetitions.contains(competition)){ throw new ExistingCompetitionException(); }
+		if (! currentCompetitions.contains(competition)){ throw new ExistingCompetitionException("Competition already canceled or finished "); }
 		else { currentCompetitions.remove(competition); }
 	}
 }
