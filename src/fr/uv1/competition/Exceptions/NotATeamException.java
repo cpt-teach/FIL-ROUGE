@@ -1,9 +1,10 @@
 package fr.uv1.competition.Exceptions;
 
-public class AuthenticationException extends Exception {
+public class NotATeamException extends Exception {
 
-	public AuthenticationException(String string) {
+	public NotATeamException() {
 		//System.out.println(string);
+		super();
 	}
 
 	/**

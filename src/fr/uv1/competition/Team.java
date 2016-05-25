@@ -1,9 +1,9 @@
-package Competition;
+package fr.uv1.competition;
 import java.util.ArrayList;
 import java.util.List;
 
-import Exceptions.BadParametersException;
-import Exceptions.ExistingCompetitorException;
+import fr.uv1.competition.Exceptions.BadParametersException;
+import fr.uv1.competition.Exceptions.ExistingCompetitorException;
 
 
 public class Team implements Competitor{
@@ -23,7 +23,7 @@ public class Team implements Competitor{
 	}
 
 	public void setName(String name) throws BadParametersException {
-		if (! Utilitary.isValidName(name)) {throw new BadParametersException(); }
+		if (! Utilitary.isValidName(name)) {throw new BadParametersException("Invalid Parameter Team Name"); }
 		this.name = name;
 	}
 	
@@ -32,12 +32,12 @@ public class Team implements Competitor{
 	
 	public void addMember(Competitor member) throws ExistingCompetitorException, BadParametersException {
 		if (members.contains(member)){ throw new ExistingCompetitorException();	}
-		else if (member.isTeam()){ throw new BadParametersException(); }
+		else if (member.isTeam()){ throw new BadParametersException("Invalid Parameter : member"); }
 		else { members.add(member); }
 	}
 
 	public void deleteMember(Competitor member) throws BadParametersException, ExistingCompetitorException {
-		if ( member.isTeam()) { throw new BadParametersException(); }
+		if ( member.isTeam()) { throw new BadParametersException("Invalid Parameter : member"); }
 		else if (! members.contains(member)){ throw new ExistingCompetitorException(); }
 		else { members.remove(member); }
 	}

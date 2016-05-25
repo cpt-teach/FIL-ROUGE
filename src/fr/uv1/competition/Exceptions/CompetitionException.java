@@ -1,4 +1,4 @@
-package fr.uv1.bettingServices.Exceptions;
+package fr.uv1.competition.Exceptions;
 
 public class CompetitionException extends Exception {
 

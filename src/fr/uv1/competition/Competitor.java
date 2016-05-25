@@ -1,9 +1,9 @@
-package Competition;
+package fr.uv1.competition;
 import java.util.List;
 
-import Exceptions.BadParametersException;
-import Exceptions.ExistingCompetitorException;
-import Exceptions.NotATeamException;
+import fr.uv1.competition.Exceptions.BadParametersException;
+import fr.uv1.competition.Exceptions.ExistingCompetitorException;
+import fr.uv1.competition.Exceptions.NotATeamException;
 
 
 public interface Competitor {
