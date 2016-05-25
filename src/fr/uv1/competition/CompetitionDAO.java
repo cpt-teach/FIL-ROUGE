@@ -3,7 +3,7 @@ package Competition;
 import java.util.ArrayList;
 import java.util.List;
 
-import Exceptions.ExistingCompetitionException;
+import fr.uv1.competition.Exceptions.ExistingCompetitionException;
 
 public class CompetitionDAO {
 	protected static List<Competition> currentCompetitions = new ArrayList<Competition>();
