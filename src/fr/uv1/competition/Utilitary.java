@@ -1,4 +1,5 @@
-package Competition;
+package fr.uv1.competition;
+import fr.uv1.utils.*;
 public class Utilitary {
 	
 	/* This class provides some useful methods, including casting from char to int etc.
