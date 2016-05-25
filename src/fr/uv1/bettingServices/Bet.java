@@ -1,15 +1,13 @@
-package fr.uv1.bettingServices.Bet;
-
-
-
+package fr.uv1.bettingServices;
 
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
-import fr.uv1.bettingServices.Compet.Competition;
-import fr.uv1.bettingServices.Compet.Competitor;
-import fr.uv1.bettingServices.Person.Subscriber;
-import fr.uv1.dao.BetDAO;
+import fr.uv1.competition.Competition;
+import fr.uv1.competition.Competitor;
+import fr.uv1.bettingServices.Subscriber;
+import fr.uv1.bettingServices.BetDAO;
 import fr.uv1.bettingServices.Exceptions.AuthenticationException;
 import fr.uv1.bettingServices.Exceptions.BadParametersException;
 import fr.uv1.bettingServices.Exceptions.CompetitionException;
@@ -25,10 +23,9 @@ import fr.uv1.utils.*;
 	    private Competitor third;
 	    private Competition competition;
 	    private Subscriber bettor;
-	    private Participation participation;
 	    private int ifPodium;
 	    
-	//waiting competitor and competition
+	    // Constructor
 		public Bet(int id,long bettorbet, Competitor first,Competitor second
 				,Competitor third, Competition competition, Subscriber bettor, int ifPodium){
 			this.id=id;
@@ -39,9 +36,6 @@ import fr.uv1.utils.*;
 		    this.competition=competition;
 		    this.bettor=bettor;
 		    this.ifPodium=ifPodium;
-		    // then we need to add the bet into the competition and subscriber
-		    competition.addBet(this);
-			subscriber.addBet(this);
 		}
 	//getter	
 		
@@ -67,11 +61,7 @@ import fr.uv1.utils.*;
 		public Subscriber getBettor(){
 			return this.bettor;
 		}
-		
-		public Participation getParticipation(){
-			return this.participation;
-		}
-		
+				
 		public int getifPodium(){
 			return this.ifPodium;
 		}
@@ -94,14 +84,11 @@ import fr.uv1.utils.*;
 		public void setSubscriber(Subscriber bettor){
 			this.bettor=bettor;
 		}
-		public void  setParticipation(Participation participation){
-			this.participation=participation;
-		}
 		
 		public void setifPodium(int ifPodium){
 			this.ifPodium=ifPodium;
 		}
-		
+/*
 	    public void betOnPodium(long numberTokens, Competition competition, Competitor first, Competitor second, Competitor third,
 				Subscriber subscriber) throws SubscriberException, CompetitionException, BadParametersException {
 			int first_Id,second_Id,third_Id;
@@ -135,7 +122,8 @@ import fr.uv1.utils.*;
 				throw new CompetitionException("Couldn't find the competitor " 
 			+ first.getName()+"within the cometition "+competition.getName());
 			//then create the bet 
-			this.winner = winner;
+			this.first = winner;
+			this.ifPodium=0;
 			//then connect to BD and edit 
 			winner.getparticipation_Id;
 			if (DatabaseConnection.PERSISTENCE_ENABLED)
@@ -144,46 +132,36 @@ import fr.uv1.utils.*;
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
-		}
+		} */
 
 		public void delete() throws CompetitionException {
 			// check if the competition is closed
-			if (competition.isEnded())
+			if (competition.isClosed())
 				throw new CompetitionException("Competition with name " + competition.getName() + " is closed");
 			// Credit the subscriber
 			try {
-				subscriber.creditSubscriber(numberTokens);
-			} catch (BadParametersException e) {
-				// Can not be raised because the number of tokens is always a positive value here
-				e.printStackTrace();
+				subscriber.creditSubscriber(numberTokens); // TODO Parameters to be defined correctly
+			} catch (BadParametersException exception) {
+				exception.printStackTrace("Bad parameter input");
 			}
-			// Delete it from the attributes of the competition and the subscriber instance
-			Subscriber.deleteBet(this);
-			competition.deleteBet(this);
 			// Delete it from the database
-			if (DatabaseConnection.PERSISTENCE_ENABLED)
 				try {
 					BetDAO.delete(this);
-				} catch (SQLException e) {
-					e.printStackTrace();
+				} catch (SQLException exception) {
+					exception.printStackTrace();
 				}
 		}
-
-		public boolean pronosticPodium(Competitor first, Competitor second,
-				Competitor third) {
-			return (this.first.equals(first) && this.second.equals(second) && this.third.equals(third));
+		// checks if the podium is valid
+		public boolean validPodium(int firstId, int secondId,
+				int thirdId) {
+			return (this.first.getId().equals(firstId) && 
+					this.second.getId().equals(secondId) && 
+					this.third.getId().equals(thirdId));
 		}
 
-		public void deleteBetForSubsAndCompetition(){
-			// Delete a bet for a subscriber and a competition.
-			subscriber.deleteBet(this);
-			competition.deleteBet(this);
-			// Delete it from the database
-			editBD.edit("postgres","postgres","jdbc:postgresql://localhost:54321/Test", 
-				"DELETE FROM bet WHERE competition="+this.competition+",bettor_Id="+this.subscriber.getSubscriberId()+";")
-		}
+
 //for betting soft
-		public void deleteBetsCompetition(String competition, String username,
+		public static void deleteBetsCompetition(String competition, String username,
 				String pwdSubs) throws AuthenticationException,
 				CompetitionException, ExistingCompetitionException {
 			// Look if a subscriber with this username exists
@@ -197,7 +175,17 @@ import fr.uv1.utils.*;
 			// Delete the bets
 			s.deleteBetsCompetition(c, pwdSubs);//ths function will go to subs
 		}
-
+//betting soft
+		
+		public ArrayList<String> consultBetsCompetition(String competition)
+				throws ExistingCompetitionException {
+			// look if the name given match a competition in the db
+			Competition c = searchCompetitionByName(competition);// another betting soft method
+			if (c == null)
+				throw new ExistingCompetitionException("Competition with name " + competition + " does not exist");
+			// Consult the bets
+			return c.consultBetsCompetition();
+		}
 
 	}
 
