@@ -57,22 +57,22 @@ public class Competition {
 
 	public static Competition getCompetitionByName(String Competition_name)throws SQLException, BadParametersException, ExistingCompetitorException, ExistingCompetitionException,NotATeamException{ // TODO in DAO
 		Competition competition = null;
-		ResultSet result = selectBD.select("postgres","postgres","jdbc:postgresql://localhost:54321/Test", "SELECT * FROM competition WHERE name LIKE"+Competition_name+";");
+		ResultSet result = selectBD.select("postgres","postgres","jdbc:postgresql://localhost:54321/Test", "SELECT * FROM competition WHERE name LIKE '"+Competition_name+"';");
 		while(result.next()){
-			ResultSet result1 = selectBD.select("postgres","postgres","jdbc:postgresql://localhost:54321/Test", "SELECT * FROM participation WHERE comp_id LIKE"+result.getString(1)+";");
+			ResultSet result1 = selectBD.select("postgres","postgres","jdbc:postgresql://localhost:54321/Test", "SELECT * FROM participation WHERE comp_id LIKE "+result.getString(1)+";");
 			while(result1.next()){
 				int isteam = new Integer(32);
 				isteam = Integer.parseInt(result1.getString(4));
 				if(isteam==1){
 					List<Competitor> liste_competitor = new ArrayList<Competitor>();
-					ResultSet result2 = selectBD.select("postgres","postgres","jdbc:postgresql://localhost:54321/Test", "SELECT * FROM team WHERE team_id LIKE"+result1.getString(2)+";");
+					ResultSet result2 = selectBD.select("postgres","postgres","jdbc:postgresql://localhost:54321/Test", "SELECT * FROM team WHERE team_id LIKE "+result1.getString(2)+";");
 					while(result2.next()){
-						ResultSet result4 = selectBD.select("postgres","postgres","jdbc:postgresql://localhost:54321/Test", "SELECT * FROM inteam WHERE team_id LIKE"+result2.getString(1)+";");
+						ResultSet result4 = selectBD.select("postgres","postgres","jdbc:postgresql://localhost:54321/Test", "SELECT * FROM inteam WHERE team_id LIKE "+result2.getString(1)+";");
 						while(result4.next()){	
 							
 							
 							Competitor competitor_team = new Team(result2.getString(2));
-							ResultSet result3 = selectBD.select("postgres","postgres","jdbc:postgresql://localhost:54321/Test", "SELECT * FROM individual WHERE indi_id LIKE"+result4.getString(1)+";");
+							ResultSet result3 = selectBD.select("postgres","postgres","jdbc:postgresql://localhost:54321/Test", "SELECT * FROM individual WHERE indi_id LIKE "+result4.getString(1)+";");
 							while(result3.next()){
 								Competitor member = new Individual(result3.getString(2),result3.getString(3),result3.getString(4));
 								competitor_team.addMember(member);

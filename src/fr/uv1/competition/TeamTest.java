@@ -29,7 +29,6 @@ public class TeamTest {
 
 	@Test
 	public void test() {
-		assert.
 		fail("Not yet implemented");
 	}
 

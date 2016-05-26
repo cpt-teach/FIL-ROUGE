@@ -1,4 +1,4 @@
-package bd;
+package fr.uv1.bd;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
