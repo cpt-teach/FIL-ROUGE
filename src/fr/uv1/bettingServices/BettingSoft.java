@@ -1,25 +1,13 @@
-package fr.uv1.bettingServices.Betting;
+package fr.uv1.bettingServices;
 import java.text.SimpleDateFormat; 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 
-import fr.uv1.bettingServices.Bet.Bet;
-import fr.uv1.bettingServices.Bet.BetOnPodium;
-import fr.uv1.bettingServices.Bet.BetOnWinner;
-import fr.uv1.bettingServices.Compet.Competition;
-import fr.uv1.bettingServices.Compet.Competitor;
-import fr.uv1.bettingServices.Compet.PersonCompetitor;
-import fr.uv1.bettingServices.Compet.TeamCompetitor;
-import fr.uv1.bettingServices.Exceptions.AuthenticationException;
-import fr.uv1.bettingServices.Exceptions.BadParametersException;
-import fr.uv1.bettingServices.Exceptions.CompetitionException;
-import fr.uv1.bettingServices.Exceptions.ExistingCompetitionException;
-import fr.uv1.bettingServices.Exceptions.ExistingSubscriberException;
-import fr.uv1.bettingServices.Exceptions.SubscriberException;
-import fr.uv1.bettingServices.Person.Subscriber;
-import fr.uv1.bettingServices.Person.Visitor;
+import fr.uv1.bettingServices.*;
+import fr.uv1.competition.*;
+import fr.uv1.bettingServices.Exceptions.*;
 import fr.uv1.utils.MyCalendar;
 
 public class BettingSoft implements Betting {

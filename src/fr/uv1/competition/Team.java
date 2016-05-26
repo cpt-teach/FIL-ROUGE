@@ -1,9 +1,12 @@
 package fr.uv1.competition;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.uv1.competition.Exceptions.BadParametersException;
-import fr.uv1.competition.Exceptions.ExistingCompetitorException;
+import fr.uv1.bd.selectBD;
+import fr.uv1.bettingServices.Exceptions.*;
+
 
 
 public class Team implements Competitor{
@@ -11,7 +14,7 @@ public class Team implements Competitor{
 	protected List<Competitor> members;
 
 	
-	public Team(String name) throws BadParametersException, ExistingCompetitorException {
+	public Team(String name) throws BadParametersException, ExistingCompetitorException, ExistingCompetitionException {
 		this.setName(name);
 		this.members = new ArrayList <Competitor>();
 		CompetitorDAO.addCompetitor(this);
@@ -53,6 +56,17 @@ public class Team implements Competitor{
 
 	public boolean isTeam() {
 		return true;
+	}
+	public int getId() throws SQLException {
+		int id = new Integer(32);
+		ResultSet result = selectBD.select("postgres","postgres","jdbc:postgresql://localhost:5433/tests", "SELECT * FROM team ;");
+		while(result.next()){
+			if( this.name.equals((result.getString(2)))) {
+		
+				id = Integer.parseInt(result.getString(1));
+			}
+		}
+	return id;	
 	}
 	
 }

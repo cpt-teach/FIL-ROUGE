@@ -154,25 +154,36 @@
 		/**
 		   */
 		public static MyCalendar fromString(String date) {
-			int day = Integer.parseInt(date.substring(0,2));
-			int mounth = Integer.parseInt(date.substring(3,5));
-			int year = Integer.parseInt(date.substring(6,10));
-			int hour = Integer.parseInt(date.substring(14,16));
-			int minute = Integer.parseInt(date.substring(17,19));
-			int second = Integer.parseInt(date.substring(20,22));
-			
-			GregorianCalendar newdate1 = new GregorianCalendar(day, mounth, year, hour,minute,second);
-			MyCalendar newdate = new MyCalendar(newdate1); //might add mounth -1 after test
+			int hour = 0;
+			int minute = 0;
+			int second = 0;
+			int day = Integer.parseInt(date.substring(8,10));
+			int mounth = Integer.parseInt(date.substring(5,7));
+			int year = Integer.parseInt(date.substring(0,4));
+			if (date.length() > 20){
+			hour = Integer.parseInt(date.substring(14,16));
+			minute = Integer.parseInt(date.substring(17,19));
+			second = Integer.parseInt(date.substring(20,22));}
+			MyCalendar newdate = new MyCalendar(year, mounth, day, hour,minute); //might add mounth -1 after test
 			return newdate;
 					
 		}
+		
 		public String toString() {
 			String s = "" + get(Calendar.DAY_OF_MONTH) + "/";
 			s += (get(Calendar.MONTH) + 1) + "/";
-			s += get(Calendar.YEAR) + "    ";
-			s += get(Calendar.HOUR_OF_DAY) + "h ";
-			s += get(Calendar.MINUTE) + "mn";
+			s += get(Calendar.YEAR) + "   ";
+			s += get(Calendar.HOUR_OF_DAY) + " h ";
+			s += get(Calendar.MINUTE) + " mn  ";
 			s += get(Calendar.SECOND) + " sec";
+			return s;
+		}
+
+
+		public String toString2() {
+			String s = get(Calendar.YEAR) + "-";
+			s += (get(Calendar.MONTH) + 1) + "-";
+			s +=  get(Calendar.DAY_OF_MONTH);
 			return s;
 		}
 	}

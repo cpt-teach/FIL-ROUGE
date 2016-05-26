@@ -6,9 +6,8 @@ import java.util.List;
 
 import fr.uv1.bd.selectBD;
 import java.sql.SQLException;
-import fr.uv1.competition.Exceptions.BadParametersException;
-import fr.uv1.competition.Exceptions.ExistingCompetitorException;
-import fr.uv1.competition.Exceptions.NotATeamException;
+import fr.uv1.bettingServices.Exceptions.*;
+
 
 public class Individual implements Competitor {
 	protected String lastName;
@@ -91,7 +90,7 @@ public class Individual implements Competitor {
 		
 				id = Integer.parseInt(result.getString(1));
 			}
-}
+		}
 	return id;	
 	}
 }

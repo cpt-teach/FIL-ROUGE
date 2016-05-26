@@ -1,15 +1,15 @@
 package fr.uv1.bettingServices;
 
-import java.io.Serializable;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 
 import fr.uv1.competition.*;
-import fr.uv1.competition.Competitor;
 import fr.uv1.bettingServices.Subscriber;
 import fr.uv1.bettingServices.BetDAO;
 import fr.uv1.bettingServices.Exceptions.*;
-import fr.uv1.utils.*;
+
+
 
 	public class Bet {
 		protected int id;
@@ -86,7 +86,7 @@ import fr.uv1.utils.*;
 		
 		public void betOnPodium(long tokens, String competitionName,
 				Competitor winner, Competitor second, Competitor third,
-				String username, String pwdSubs) throws ExistingSubscriberException, ExistingCompetitionException, CompetitionException, SubscriberException, BadParametersException, AuthenticationException {
+				String username, String pwdSubs) throws ExistingSubscriberException, CompetitionException, SubscriberException, BadParametersException, AuthenticationException, SQLException, NotATeamException, ExistingCompetitorException, ExistingCompetitionException, BadParametersException{
 				
 			Subscriber subs = Subscriber.getSubscriberByUsername(username);
 			Competition comp = Competition.getCompetitionByName(competitionName);
@@ -108,7 +108,7 @@ import fr.uv1.utils.*;
 				throw new CompetitionException("Competition is finished");
 			
 			//Checking subscriberTokens higher than tokens
-			long subscriberTokens = subs.gettokens();
+			long subscriberTokens = subs.getTokens();
 			if(subscriberTokens < tokens)
 				throw new SubscriberException("Not enough tokens");
 			
@@ -117,8 +117,8 @@ import fr.uv1.utils.*;
 		
 			//Check if the bettor is a competitor of the competition
 			
-			String subscriberFirstname = subs.getFirstname();
-			String subscriberLastname = subs.getLastname();
+			String subscriberFirstname = subs.getFirstName();
+			String subscriberLastname = subs.getLastName();
 			for(Competitor c : competitors) {
 				if(c instanceof Individual) {
 					Individual pc =(Individual) c;
@@ -149,9 +149,10 @@ import fr.uv1.utils.*;
 
 
 	public void betOnWinner(long tokens, String competitionName,
-			Competitor winner, String username, String pwdSubs) throws ExistingSubscriberException, ExistingCompetitionException, CompetitionException, SubscriberException, BadParametersException, AuthenticationException {
+			Competitor winner, String username, String pwdSubs) throws ExistingSubscriberException, BadParametersException, SQLException,
+			BadParametersException, ExistingCompetitorException, ExistingCompetitionException, NotATeamException, ExistingCompetitionException, CompetitionException, SubscriberException{
 	
-		Subscriber subs = Subscriber.getSubscriberByUsername(username); // TODO mahfoudi
+		Subscriber subs = Subscriber.getSubscriberByUsername(username); 
 		Competition comp = Competition.getCompetitionByName(competitionName);
 		
 		//check if the subs and competition exists
@@ -167,7 +168,7 @@ import fr.uv1.utils.*;
 			throw new CompetitionException("Competition is finished");
 		
 		//Check if the bet amount is inferior to the number of the subscriber's tokens
-		long subsTokens = subs.gettokens();
+		long subsTokens = subs.getTokens();
 		if(subsTokens < tokens)
 			throw new SubscriberException("Not enough tokens");	
 			
@@ -188,19 +189,18 @@ import fr.uv1.utils.*;
 	    		
 		// checks if the podium is valid
 		public boolean validPodium(int firstId, int secondId,
-				int thirdId) {
-			return (this.first.getId().equals(firstId) && 
-					this.second.getId().equals(secondId) && 
-					this.third.getId().equals(thirdId));
+				int thirdId) throws SQLException {
+			return (this.first.getId()==(firstId) && 
+					this.second.getId()==(secondId) && 
+					this.third.getId()==(thirdId));
 		}
 
-/* TODO
 //for betting soft
 		public static void deleteBetsCompetition(String competition, String username,
 				String pwdSubs) throws AuthenticationException,
-				CompetitionException, ExistingCompetitionException {
+				CompetitionException, ExistingCompetitionException, SQLException, ExistingCompetitorException, ExistingCompetitionException, NotATeamException, BadParametersException, BadParametersException {
 			// Look if a subscriber with this username exists
-			Subscriber sub = searchSubscriberByUsername(username);//Saad will do dis
+			Subscriber sub = Subscriber.getSubscriberByUsername(username);//Saad will do dis
 			if (sub == null)
 				throw new AuthenticationException("Subscriber with username " + username + " does not exist");
 			// Look if a competition with this name exists
@@ -208,25 +208,24 @@ import fr.uv1.utils.*;
 			if (comp == null)
 				throw new ExistingCompetitionException("Competition with name " + competition + " does not exist");
 			// Delete the bets
-			// TODO
 			try {
-				BetDAO.delete(this);
+				BetDAO.delete(comp,sub);
 			} catch (SQLException exception) {
 				exception.printStackTrace();
 			}
 	}
-		}
+		
 //betting soft
 		
-		public static ArrayList<String> consultBetsCompetition(String competition)
-				throws ExistingCompetitionException {
-			// look if the name given match a competition in the db
-			Competition c = searchCompetitionByName(competition);// another betting soft method
-			if (c == null)
-				throw new ExistingCompetitionException("Competition with name " + competition + " does not exist");
-			// Consult the bets
-			return c.consultBetsCompetition();
-		}
-
+	public static ArrayList<Bet> consultBetsCompetition(String competition)
+			throws ExistingCompetitionException, SQLException, BadParametersException, ExistingCompetitorException, ExistingCompetitionException, NotATeamException {
+		// look if the name given match a competition in the db
+		Competition competition_object = Competition.getCompetitionByName(competition);
+		if (competition == null) {
+			throw new ExistingCompetitionException("Competition with name " + competition + " does not exist");}
+		// Consult the bets
+		  ArrayList<Bet> bets = BetDAO.consult(competition_object);
+		   return bets;
 	}
-*/
+	}
+
