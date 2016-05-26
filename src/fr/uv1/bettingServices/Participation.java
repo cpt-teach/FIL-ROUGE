@@ -2,8 +2,8 @@ package fr.uv1.bettingServices;
 
 import java.io.Serializable;
 
-import fr.uv1.bettingServices.exceptions.AuthenticationException;
-import fr.uv1.bettingServices.exceptions.BadParametersException;
+import fr.uv1.bettingServices.Exceptions.AuthenticationException;
+import fr.uv1.bettingServices.Exceptions.BadParametersException;
 import fr.uv1.utils.*;
 
 public class Participation {

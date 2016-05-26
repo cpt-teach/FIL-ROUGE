@@ -1,15 +1,15 @@
-package lot2;
+package fr.uv1.bettingServices;
 
 import java.io.Serializable;
-import bd.editBD;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
 
-import bd.selectBD;
+import fr.uv1.bd.*;
+
+import java.sql.ResultSet;
+import java.util.ArrayList;
 import fr.uv1.bettingServices.Exceptions.*;
-import lot2.Exceptions.*;;
 import fr.uv1.utils.*;
+import java.sql.SQLException;
+
 
 /**
  * 
@@ -63,7 +63,8 @@ public class Subscriber implements Serializable {
 	 * validity of names
 	 */
 	public Subscriber(String a_username, String a_name, String a_firstName, MyCalendar a_birthday)
-			throws BadParametersException {
+			throws BadParametersException,
+				   SQLException {
 		this.subscriber_id=0;
 		this.setLastname(a_name);
 		this.setFirstname(a_firstName);
@@ -71,11 +72,10 @@ public class Subscriber implements Serializable {
 		// Generate password
 		this.password = RandPass.getPass(Constraints.LONG_PWD);
 		this.setbirthday(a_birthday);
-		if (DatabaseConnection.PERSISTENCE_ENABLED)
 				try {
 					SubscriberDAO.persist(this);
-				} catch (SQLException e) {
-					e.printStackTrace();
+				} catch (SQLException exception) {
+					exception.printStackTrace();
 				}
 	}
 	public Subscriber(int subscriber_id, String a_username, String password, String a_name, String a_firstName, long tokens, MyCalendar a_birthday)
@@ -279,37 +279,6 @@ public class Subscriber implements Serializable {
 	}
 	
 	
-	public static void	creditSubscriber(java.lang.String username, long Tokens, java.lang.String managerPwd)
-			throws BadParametersException {
-		// Check parameter
-		if (Tokens < 0)
-			throw new BadParametersException("The number of tokens must be positive value (given : " + Tokens + ")");
-		// Credit the subscriber
-		tokens = (int) (tokens + Tokens);
-		// Update to the database
-			try {
-				SubscriberDAO.update(this);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-	}
-	public static void debitSubscriber(java.lang.String username,
-										long Tokens,
-										java.lang.String managerPwd))
-			throws BadParametersException {
-		// Check parameter
-		if (Tokens < 0)
-			throw new BadParametersException("The number of tokens must be positive value (given : " + Tokens + ")");
-		// Credit the subscriber
-		tokens = (int) (tokens - Tokens);
-		// Update to the database
-			try {
-				SubscriberDAO.update(this);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-
-	}
 	
 	
 	
@@ -337,36 +306,37 @@ public class Subscriber implements Serializable {
 		// Change password
 		this.password = newPwd;
 		// Update to the database
+		if (DatabaseConnection.PERSISTENCE_ENABLED)
 			try {
 				SubscriberDAO.update(this);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
+	}
 
-	public static  Subscriber getSubscriberByUsername(String username)
-			throws BadParametersException{
+	public Subscriber getSubscriberByUsername(String username)
+			throws BadParameterExeception{
 			Subscriber subscriber=null;
 
+		if (DatabaseConnection.PERSISTENCE_ENABLED)
 			try {
 				subscriber=SubscriberDAO.getSubscriberByUsername(username);
-			} catch (SQLException exception) {
-				exception.printStackTrace();
+			} catch (SQLException e) {
+				e.printStackTrace();
 			}
 			return subscriber;
 	}
 	public Subscriber getSubscriberById(String username)
-			throws BadParametersException{
+			throws BadParameterExeception{
 			Subscriber subscriber=null;
 
+		if (DatabaseConnection.PERSISTENCE_ENABLED)
 			try {
 				subscriber=SubscriberDAO.getSubscriberByUsername(username);
-			} catch (SQLException exception) {
-				exception.printStackTrace();
+			} catch (SQLException e) {
+				e.printStackTrace();
 			}
 			return subscriber;
-	}
-	public int getId() {
-		return 0;
 	}
 	
 
