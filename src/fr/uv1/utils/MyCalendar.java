@@ -156,14 +156,12 @@
 		public static MyCalendar fromString(String date) {
 			int hour = 0;
 			int minute = 0;
-			int second = 0;
 			int day = Integer.parseInt(date.substring(8,10));
 			int mounth = Integer.parseInt(date.substring(5,7));
 			int year = Integer.parseInt(date.substring(0,4));
 			if (date.length() > 20){
 			hour = Integer.parseInt(date.substring(14,16));
-			minute = Integer.parseInt(date.substring(17,19));
-			second = Integer.parseInt(date.substring(20,22));}
+			minute = Integer.parseInt(date.substring(17,19));}
 			MyCalendar newdate = new MyCalendar(year, mounth, day, hour,minute); //might add mounth -1 after test
 			return newdate;
 					

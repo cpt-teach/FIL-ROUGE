@@ -63,7 +63,7 @@ public class Competition {
 		this.sport=sport;
 	}
 
-	public static Competition getCompetitionByName(String Competition_name)throws SQLException, BadParametersException, ExistingCompetitorException, ExistingCompetitionException,NotATeamException{ // TODO in DAO
+	public static Competition getCompetitionByName(String Competition_name)throws SQLException, BadParametersException, ExistingCompetitorException, ExistingCompetitionException, NotATeamException{ // TODO in DAO
 		Competition competition = null;
 		ResultSet result = selectBD.select("postgres","postgres","jdbc:postgresql://localhost:5433/tests", "SELECT * FROM competition WHERE name LIKE '"+Competition_name+"';");
 		while(result.next()){

@@ -26,9 +26,9 @@ public interface Betting {
 	
 	void deleteCompetitor(String competitionName, Competitor competitor, String managerPassword) throws AuthenticationException, ExistingCompetitionException, CompetitionException;
 	
-	PersonCompetitor createPersonCompetitor(String lastName, String firstName, String bornDate, String managerPassword) throws AuthenticationException;
+	Competitor createPersonCompetitor(String lastName, String firstName, String bornDate, String managerPassword) throws AuthenticationException;
 	
-	TeamCompetitor createTeamCompetitor(String teamName, String managerPassword) throws AuthenticationException;
+	Competitor createTeamCompetitor(String teamName, String managerPassword) throws AuthenticationException;
 
 	void creditSubscriber(String username, long tokens, String managerPassword) throws AuthenticationException, ExistingSubscriberException, BadParametersException;
 

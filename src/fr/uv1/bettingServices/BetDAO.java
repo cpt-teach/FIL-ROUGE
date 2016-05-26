@@ -36,21 +36,21 @@ public class BetDAO {
 			if (bet.getifPodium()==0) { // This is a winner type bet
 				String request;
 				request = "insert into bets(bettor_Id,competition_ID,montant,winner_Id,ifPodium)  values (" +
-						 +bet.getBettor().getSubscriberId()+"," +bet.getCompetition().getCompetitionId()+
+						 +bet.getBettor().getSubscriber_id()+"," +bet.getCompetition().getId()+
 						"," +bet.getBettorBet()+
-						"," +bet.getfirst().getID()+
+						"," +bet.getfirst().getId()+
 						",0);";
-				ResultSet result = editBD.edit(user,password,url, request );}
+				editBD.edit(user,password,url, request );}
 
 			if (bet.getifPodium()==1) { // This is a podium type bet
 				// Create the bet of the first competitor hashtag winner
 				String request;
 				request = "insert into bets(bettor_Id, competition_ID,montant,winner_Id, second_Id, third_Id,ifPodium)  values (" +
-						 +bet.getBettor().getSubscriberId()+"," +bet.getCompetition().getCompetitionId()+
+						 +bet.getBettor().getSubscriber_id()+"," +bet.getCompetition().getId()+
 						"," +bet.getBettorBet()+
-						"," +bet.getfirst().getID()+bet.getsecond().getID()+bet.getthird().getID()+
+						"," +bet.getfirst().getId()+bet.getsecond().getId()+bet.getthird().getId()+
 						",1);";
-				ResultSet result1 = editBD.edit(user,password,url, request );
+				editBD.edit(user,password,url, request );
 			}
 
 
@@ -74,20 +74,20 @@ public class BetDAO {
 		if (bet instanceof Bet && bet.getifPodium()==0) { // This is a winner type bet
 			String request;
 			request = "update bets set (bettor_Id,competition_ID,montant,winner_Id,ifPodium)  values (" +
-					 +bet.getBettor().getSubscriberId()+"," +bet.getCompetition().getCompetitionId()+
+					 +bet.getBettor().getSubscriber_id()+"," +bet.getCompetition().getId()+
 					"," +bet.getBettorBet()+
-					"," +bet.getfirst().getID()+
+					"," +bet.getfirst().getId()+
 					",0);";
-			ResultSet result = editBD.edit(user,password,url, request );}
+			editBD.edit(user,password,url, request );}
 		
 	    if (bet instanceof Bet && bet.getifPodium()==1) { // This is a podium type bet
 	    	String request;
 			request = "update bets set(bettor_Id, competition_ID,montant,winner_Id, second_Id, third_Id,ifPodium)  values (" +
-					 +bet.getBettor().getSubscriberId()+"," +bet.getCompetition().getCompetitionId()+
+					 +bet.getBettor().getSubscriber_id()+"," +bet.getCompetition().getId()+
 					"," +bet.getBettorBet()+
-					"," +bet.getfirst().getID()+bet.getsecond().getID()+bet.getthird().getID()+
+					"," +bet.getfirst().getId()+bet.getsecond().getId()+bet.getthird().getId()+
 					",1);";
-			ResultSet result1 = editBD.edit(user,password,url, request );
+			editBD.edit(user,password,url, request );
 	    }
 		
 	    // Closing the database connection.
@@ -108,7 +108,7 @@ public class BetDAO {
 		// Get a database connection.
 	    
 	    // Delete the bet.
-	    ResultSet result = editBD.edit(user,password,url, 
+	    editBD.edit(user,password,url, 
 	    		"DELETE FROM bets where competition_id="+competition.getId()+", bettor_id"+subscriber.getId()+";");
 
 	  }

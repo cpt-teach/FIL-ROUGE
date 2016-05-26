@@ -1,4 +1,4 @@
-package fr.uv1.bettingServices.Bet;
+package fr.uv1.bettingServices;
 
 public class Participation {
 

@@ -1,5 +1,5 @@
-package lot3;
-import bd.selectBD;
+package fr.uv1.competition;
+import fr.uv1.bd.selectBD;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -10,23 +10,24 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
+import fr.uv1.bettingServices.*;
 
 public class Competition_Results {
 	
-	//private Participation podium1;
-	//private Participation podium2;
-	//private Participation podium3;
+	private Participation podium1;
+	private Participation podium2;
+	private Participation podium3;
 	
 	private int Competition_Id;
 	
-	/*public Competition_Results(Participation podium1, Participation podium2, Participation podium3, int Competition_Id){
+	public Competition_Results(Participation podium1, Participation podium2, Participation podium3, int Competition_Id){
 		this.setFirst(podium1);
 		this.setSecond(podium2);
 		this.setThird(podium3);
 		this.setCompetition(Competition_Id);
 		}
 		
-		//Définirtion des setteurs
+		//Definirtion des setteurs
 	public void setFirst(Participation first){
 	this.podium1 = first;
 	} 
@@ -71,17 +72,17 @@ public class Competition_Results {
 		return 3;
 	else
 		return -1;
-	}*/
+	}
 	public static java.util.ArrayList<String> consultResultsCompetition(java.lang.String competition)
                                                           throws SQLException{
                	ArrayList<String> List = new ArrayList<String>(); // ArrayList<Competitor> List = new ArrayList<Competitor>;
 	  	//Check if all the parameters are valid
 		//competition
-		//competition_object = getCompetitionByName(competition); // doit être impélmentée par le lot1
-		//if(competition_object == null)
-			//throw new ExistingCompetitionException("The competition named does not exist");
+		competition_object = getCompetitionByName(competition); // doit être impélmentée par le lot1
+		if(competition_object == null)
+			throw new ExistingCompetitionException("The competition named does not exist");
 		
-        List = ResultCompetition (competition)
+        List = ResultCompetition (competition_object);
 		} }
 		return List;
 		}

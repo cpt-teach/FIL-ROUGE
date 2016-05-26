@@ -365,6 +365,9 @@ public class Subscriber implements Serializable {
 			}
 			return subscriber;
 	}
+	public int getId() {
+		return 0;
+	}
 	
 
 	
