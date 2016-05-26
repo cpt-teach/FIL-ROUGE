@@ -44,7 +44,9 @@ public class bettingSoftbis {
         	   ExistingCompetitionException,
         	   CompetitionException,
 			   BadParametersException,
-			   SQLException {	
+			   SQLException,
+			   NotATeamException,
+			   ExistingCompetitorException{	
 		
        // First we authenticate the manager
 		this.authenticateMngr(managerPwd);
@@ -98,13 +100,17 @@ public class bettingSoftbis {
 			}
 
 		}	
+
 	}
 
 	public void settlePodium(String competition, Competitor winner, Competitor second, Competitor third, String managerPwd)
         		throws AuthenticationException,
-        				ExistingCompetitionException,
-        				CompetitionException,
-        				BadParametersException {	
+         	   ExistingCompetitionException,
+         	   CompetitionException,
+ 			   BadParametersException,
+ 			   SQLException,
+ 			   NotATeamException,
+ 			   ExistingCompetitorException {	
 		
 			
 			 // First we authenticate the manager
@@ -165,14 +171,21 @@ public class bettingSoftbis {
 				}
 
 			}
+			//delete comp
 	}
+	
 
 	
 
 	public static java.util.ArrayList<Competitor> consultResultsCompetition(java.lang.String competition)
-            throws SQLException{
-		Competition_ResultsDAO dao;
-		ArrayList<Competitor> podium = new ArrayList<Competitor>();
+            throws AuthenticationException,
+     	   ExistingCompetitionException,
+     	   CompetitionException,
+			   BadParametersException,
+			   SQLException,
+			   NotATeamException,
+			   ExistingCompetitorException{
+		Competition_ResultsDAO dao = new Competition_ResultsDAO();
 		//Check if all the parameters are valid
 		//competition
 		Competition competition_object = Competition.getCompetitionByName(competition);

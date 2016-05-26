@@ -12,6 +12,11 @@ public class Competition_ResultsDAO {
 	private static String url="jdbc:postgresql://localhost:5433/tests";
 	private static String user="postgres";
 	private static String password="postgres";
+	
+	//Constructor
+	public Competition_ResultsDAO (){
+		
+	}
 
 	public int[] ResultCompetition(Competition competition) throws SQLException {
 	    String request = "SELECT * FROM competition_results WHERE id_comp = "+ competition.getId() +";";
@@ -48,12 +53,10 @@ public class Competition_ResultsDAO {
 	    ResultSet resultIndividual = selectBD.select(user,password,url,requestIndividual );
 	    Competitor test = null;
 	    if (resultTeam.next()) {
-	    	Competitor competitor = new Team(resultTeam.getString(2));
-	    	test = competitor;
+	    	test = new Team(resultTeam.getString(2));
 	    }
 	    if (resultIndividual.next()) {
-	    	Competitor competitor = new Individual(resultIndividual.getString(2),resultIndividual.getString(3),resultIndividual.getString(4));
-	    	test = competitor;
+	    	test = new Individual(resultIndividual.getString(2),resultIndividual.getString(3),resultIndividual.getString(4));
 	    }
 	    return test;
 	}
