@@ -5,10 +5,10 @@ import fr.uv1.bettingServices.Exceptions.*;
 import java.sql.SQLException;
 
 public interface Competitor {
-	public abstract void addMember(Competitor member) throws NotATeamException, ExistingCompetitorException, BadParametersException;
-	public abstract void deleteMember(Competitor member) throws NotATeamException, BadParametersException, ExistingCompetitorException;
-	public abstract List<Competitor> listMembers() throws NotATeamException;
-	public abstract boolean hasValidName();
-	public abstract boolean isTeam();
-	public abstract int getId() throws SQLException;
+	public void addMember(Competitor member) throws NotATeamException, ExistingCompetitorException, BadParametersException, SQLException;
+	public void deleteMember(Competitor member) throws NotATeamException, BadParametersException, ExistingCompetitorException, SQLException;
+	public List<Competitor> listMembers() throws NotATeamException;
+	public boolean hasValidName();
+	public boolean isTeam();
+	public int getId() throws SQLException;
 }

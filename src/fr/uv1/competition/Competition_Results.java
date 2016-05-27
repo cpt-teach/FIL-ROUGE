@@ -64,11 +64,11 @@ public class Competition_Results {
 		//Autres méthodes
 		
 	public int IsPodium(Participation id){
-	if(id.getId()==podium1.getId())  //getId est une méthode de la classe Participation
+	if(id.getParticipationId()==podium1.getParticipationId())  //getId est une méthode de la classe Participation
 		return 1;
-	else if(id.getId()==podium2.getId())  //getId est une méthode de la classe Participation
+	else if(id.getParticipationId()==podium2.getParticipationId())  //getId est une méthode de la classe Participation
 		return 2;
-	else if(id.getId()==podium3.getId())  //getId est une méthode de la classe Participation
+	else if(id.getParticipationId()==podium3.getParticipationId())  //getId est une méthode de la classe Participation
 		return 3;
 	else
 		return -1;
@@ -78,7 +78,8 @@ public class Competition_Results {
                	ArrayList<String> List = new ArrayList<String>(); // ArrayList<Competitor> List = new ArrayList<Competitor>;
 	  	//Check if all the parameters are valid
 		//competition
-		competition_object = getCompetitionByName(competition); // doit être impélmentée par le lot1
+        Competition competition_object = new Competition();
+		competition_object = Competition.getCompetitionByName(competition); // doit être impélmentée par le lot1
 		if(competition_object == null)
 			throw new ExistingCompetitionException("The competition named does not exist");
 		
