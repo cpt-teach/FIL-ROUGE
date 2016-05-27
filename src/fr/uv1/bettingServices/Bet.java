@@ -104,7 +104,7 @@ import fr.uv1.bettingServices.Exceptions.*;
 				throw new ExistingCompetitionException("This name doesn't match any competition");
 
 			//Checking if competition is closed or not
-			if(comp.isClosed())
+			else if(comp.isClosed())
 				throw new CompetitionException("Competition is finished");
 			
 			//Checking subscriberTokens higher than tokens
@@ -164,7 +164,7 @@ import fr.uv1.bettingServices.Exceptions.*;
 			throw new ExistingCompetitionException("Couldn't find competition");
 		
 		//Check if the competition date has closed
-		if(comp.isClosed())
+		else if(comp.isClosed())
 			throw new CompetitionException("Competition is finished");
 		
 		//Check if the bet amount is inferior to the number of the subscriber's tokens
@@ -200,7 +200,7 @@ import fr.uv1.bettingServices.Exceptions.*;
 				String pwdSubs) throws AuthenticationException,
 				CompetitionException, ExistingCompetitionException, SQLException, ExistingCompetitorException, ExistingCompetitionException, NotATeamException, BadParametersException, BadParametersException {
 			// Look if a subscriber with this username exists
-			Subscriber sub = Subscriber.getSubscriberByUsername(username);//Saad will do dis
+			Subscriber sub = Subscriber.getSubscriberByUsername(username);
 			if (sub == null)
 				throw new AuthenticationException("Subscriber with username " + username + " does not exist");
 			// Look if a competition with this name exists

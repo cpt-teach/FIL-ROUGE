@@ -3,7 +3,6 @@ package fr.uv1.bd;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
-import java.sql.ResultSet;
 
 public class editBD {
 	public static void edit(String user, String password, String url, String sqlrequest){

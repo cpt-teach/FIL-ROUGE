@@ -2,17 +2,19 @@ package fr.uv1.bettingServices;
 import fr.uv1.bd.*;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.List;
 
-import fr.uv1.bettingServices.*;
 import fr.uv1.competition.*;
-import fr.uv1.bettingServices.Exceptions.*;
 
-import fr.uv1.utils.*;
 
 public class BetDAO {
 	
+	private String url="jdbc:postgresql://localhost:54321/Test";
+	private String user="postgres";
+	private String password="postgres";
 	
+	public BetDAO() {
+		
+	}
 	
 	//-----------------------------------------------------------------------------------------------------------
 		/**
@@ -22,12 +24,10 @@ public class BetDAO {
 		 * @return the bet with the updated value for the id.
 		 * @throws SQLException
 		 */
-	private static String url="jdbc:postgresql://localhost:54321/Test";
-	private static String user="postgres";
-	private static String password="postgres";
+
 	
 	public static void persist(Bet bet) throws SQLException {
-
+		BetDAO dao = new BetDAO();
 		//Connection c = DatabaseConnection.getConnection();
 		//(long numberTokens, Competition competition, Competitor first, Competitor second, Competitor third,Subscriber subscriber)
 		
@@ -40,7 +40,7 @@ public class BetDAO {
 						"," +bet.getBettorBet()+
 						"," +bet.getfirst().getId()+
 						",0);";
-				editBD.edit(user,password,url, request );}
+				editBD.edit(dao.user,dao.password,dao.url, request );}
 
 			if (bet.getifPodium()==1) { // This is a podium type bet
 				// Create the bet of the first competitor hashtag winner
@@ -50,7 +50,7 @@ public class BetDAO {
 						"," +bet.getBettorBet()+
 						"," +bet.getfirst().getId()+bet.getsecond().getId()+bet.getthird().getId()+
 						",1);";
-				editBD.edit(user,password,url, request );
+				editBD.edit(dao.user,dao.password,dao.url, request );
 			}
 
 
@@ -68,7 +68,7 @@ public class BetDAO {
 	   * @throws SQLException
 	   */
 	public static void update(Bet bet) throws SQLException {
-		  
+		BetDAO dao = new BetDAO();  
 	    // Get a database connection.yobvh
 	    // Update the bet.
 		if (bet instanceof Bet && bet.getifPodium()==0) { // This is a winner type bet
@@ -78,7 +78,7 @@ public class BetDAO {
 					"," +bet.getBettorBet()+
 					"," +bet.getfirst().getId()+
 					",0);";
-			editBD.edit(user,password,url, request );}
+			editBD.edit(dao.user,dao.password,dao.url, request );}
 		
 	    if (bet instanceof Bet && bet.getifPodium()==1) { // This is a podium type bet
 	    	String request;
@@ -87,7 +87,7 @@ public class BetDAO {
 					"," +bet.getBettorBet()+
 					"," +bet.getfirst().getId()+bet.getsecond().getId()+bet.getthird().getId()+
 					",1);";
-			editBD.edit(user,password,url, request );
+			editBD.edit(dao.user,dao.password,dao.url, request );
 	    }
 		
 	    // Closing the database connection.
@@ -103,19 +103,20 @@ public class BetDAO {
 	   */
 	
 	public static void delete(Competition competition, Subscriber subscriber) throws SQLException {
-		  //DELETE FROM Customers
-		//WHERE CustomerName='Alfreds Futterkiste' AND ContactName='Maria Anders'; 
+
 		// Get a database connection.
 	    
 	    // Delete the bet.
-	    editBD.edit(user,password,url, 
-	    		"DELETE FROM bets where competition_id="+competition.getId()+", bettor_id"+subscriber.getId()+";");
+		BetDAO dao = new BetDAO();
+	    editBD.edit(dao.user,dao.password,dao.url, 
+	    		"DELETE FROM bets where competition_id="+competition.getId()+", bettor_id"+subscriber.getSubscriber_id()+";");
 
 	  }
 	    
 	    
 	    public static ArrayList<Bet>  consult(Competition competition) throws SQLException{
-	    	ResultSet result=selectBD.select(user,password,url, 
+	    	BetDAO dao = new BetDAO();
+	    	ResultSet result=selectBD.select(dao.user,dao.password,dao.url, 
 		    		"SELECT* FROM bets where competition_id="+competition.getId()+";");
 	    	ArrayList<Bet> consultList =new ArrayList<Bet>();
 	    	while(result.next()){
