@@ -1,10 +1,10 @@
 package fr.uv1.competition;
-import java.sql.ResultSet;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.uv1.bd.selectBD;
+
 import fr.uv1.bettingServices.Exceptions.*;
 
 
@@ -87,13 +87,7 @@ public class Team implements Competitor{
 	}
 	public int getIdbd() throws SQLException {
 		int id = new Integer(32);
-		ResultSet result = selectBD.select("postgres","postgres","jdbc:postgresql://localhost:5433/tests", "SELECT * FROM team ;");
-		while(result.next()){
-			if( this.name.equals((result.getString(2)))) {
-		
-				id = Integer.parseInt(result.getString(1));
-			}
-		}
+		id = TeamDAO.selectTeamId(this.name);
 	return id;	
 	}
 	

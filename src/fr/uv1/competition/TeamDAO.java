@@ -110,5 +110,17 @@ public class TeamDAO {
 		} 
     	return consultList;
 }
+	public static int selectTeamId(String name) throws SQLException {
+		int id = new Integer(32);
+		TeamDAO dao = new TeamDAO();
+		ResultSet result = selectBD.select(dao.user,dao.password,dao.url, "SELECT * FROM team ;");
+		while(result.next()){
+			if( name.equals((result.getString(2)))) {
+		
+				id = Integer.parseInt(result.getString(1));
+			}
+		}
+	return id;	
+	}
     	
 }

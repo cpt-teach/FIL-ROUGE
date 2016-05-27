@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.uv1.bd.*;
+import fr.uv1.utils.MyCalendar;
 
 
 public class IndividualDAO {
@@ -95,7 +96,20 @@ public class IndividualDAO {
 		} 
     	return consultList;
 }
-	    	
+	public static int selectIndividualId(String lastName,String firstName,MyCalendar bornDate)throws SQLException {
+		int id = new Integer(32);
+		IndividualDAO dao = new IndividualDAO();
+		ResultSet result = selectBD.select(dao.user,dao.password,dao.url, "SELECT * FROM individual ;");
+		while(result.next()){
+			if(lastName.equals(result.getString(2))&&
+			   firstName.equals(result.getString(3))&&
+			   bornDate.equals(MyCalendar.fromString(result.getString(4)))){
+		
+				id = result.getInt(1);
+			}
+		}
+	return id;
+	}
 }
 	
 	

@@ -1,10 +1,10 @@
 package fr.uv1.competition;
 import fr.uv1.utils.*;
 
-import java.sql.ResultSet;
+
 import java.util.List;
 
-import fr.uv1.bd.selectBD;
+
 import java.sql.SQLException;
 import fr.uv1.bettingServices.Exceptions.*;
 
@@ -91,16 +91,8 @@ public class Individual implements Competitor {
 	}
 	
 	public int getIdbd()throws SQLException {
-		int id = new Integer(32);
-		ResultSet result = selectBD.select("postgres","postgres","jdbc:postgresql://localhost:54321/Test", "SELECT * FROM individual ;");
-		while(result.next()){
-			if(this.lastName.equals(result.getString(2))&&
-			   this.firstName.equals(result.getString(3))&&
-			   this.bornDate.equals(MyCalendar.fromString(result.getString(4)))){
+		int id = IndividualDAO.selectIndividualId(this.lastName,this.firstName,this.bornDate);
+		return id;
 		
-				id = Integer.parseInt(result.getString(1));
-			}
-		}
-	return id;	
 	}
 }

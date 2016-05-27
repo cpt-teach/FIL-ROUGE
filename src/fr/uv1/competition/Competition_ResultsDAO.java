@@ -1,7 +1,6 @@
 package fr.uv1.competition;
 
-import java.util.ArrayList;
-import java.util.List;
+
 import fr.uv1.bd.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
