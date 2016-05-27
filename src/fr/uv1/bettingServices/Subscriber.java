@@ -1,15 +1,10 @@
 package fr.uv1.bettingServices;
 
 import java.io.Serializable;
-
-import fr.uv1.bd.*;
-
-import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import fr.uv1.bettingServices.Exceptions.*;
 import fr.uv1.utils.*;
-import java.sql.SQLException;
-
 
 /**
  * 
@@ -46,8 +41,6 @@ public class Subscriber implements Serializable {
 	private static final String REGEX_NAME = new String("[a-zA-Z][a-zA-Z\\-\\ ]*");
 	private static final String REGEX_USERNAME = new String("[a-zA-Z0-9]*");
 	private long tokens;
-	
-	private ArrayList<Bet> betlist;
 	private String firstname;
 	private String lastname;
 	private int subscriber_id;
@@ -63,19 +56,18 @@ public class Subscriber implements Serializable {
 	 * validity of names
 	 */
 	public Subscriber(String a_username, String a_name, String a_firstName, MyCalendar a_birthday)
-			throws BadParametersException,
-				   SQLException {
+			throws BadParametersException {
 		this.subscriber_id=0;
 		this.setLastname(a_name);
 		this.setFirstname(a_firstName);
 		this.setUsername(a_username);
 		// Generate password
-		this.password = RandPass.getPass(Constraints.LONG_PWD);
+		this.setPassword(RandPass.getPass(Constraints.LONG_PWD));
 		this.setbirthday(a_birthday);
 				try {
 					SubscriberDAO.persist(this);
-				} catch (SQLException exception) {
-					exception.printStackTrace();
+				} catch (SQLException e) {
+					e.printStackTrace();
 				}
 	}
 	public Subscriber(int subscriber_id, String a_username, String password, String a_name, String a_firstName, long tokens, MyCalendar a_birthday)
@@ -132,7 +124,7 @@ public class Subscriber implements Serializable {
 		checkStringUsername(username);
 		this.username = username;
 	}
-	private void setPassword(String password) throws BadParametersException {
+	public void setPassword(String password) throws BadParametersException {
 		if (password == null)
 			throw new BadParametersException("password is not valid");
 		if (!BettingPasswordsVerifier.verify(password))
@@ -149,18 +141,20 @@ public class Subscriber implements Serializable {
 	public void setSubscriber_id(int subscriber_id){
 		this.subscriber_id=subscriber_id;
 	}
-
-	
-	private ArrayList<String> listOfBets() {
-		ArrayList<String> result = new ArrayList<String>();
-		long sum = 0;
-		for (Bet b : betlist) {
-			sum += b.getBettorBet();
-			result.add(b.toString());
-		}
-		result.add(0, Long.toString(sum));
-		return result;
+	public void setTokens(long Tokens){
+		this.tokens=Tokens;
 	}
+	
+//	private ArrayList<String> listOfBets() {
+//		ArrayList<String> result = new ArrayList<String>();
+//		long sum = 0;
+//		for (Bet b : betlist) {
+//			sum += b.getBettorBet();
+//			result.add(b.toString());
+//		}
+//		result.add(0, Long.toString(sum));
+//		return result;
+//	}
 	
 	/*
 	 * check if this subscriber has the username of the parameter
@@ -194,8 +188,16 @@ public class Subscriber implements Serializable {
 
 	@Override
 	public String toString() {
-		return " " + firstname + " " + lastname + " " + username;
+		return " " + this.firstname + " " + this.lastname + " " + this.username;
 	}
+	public ArrayList<String> listNames(Subscriber subscriber) {
+		ArrayList<String> result = new ArrayList<String>();
+		result.add(subscriber.getLastName());
+		result.add(subscriber.getFirstName());
+		result.add(subscriber.getUserName());
+		return result;
+	}
+
 
 	/**
 	 * check the validity of a string for a subscriber lastname, letters, dashes
@@ -236,7 +238,7 @@ public class Subscriber implements Serializable {
 	 */
 	private static void checkStringFirstName(String a_firstname)
 			throws BadParametersException {
-		// Same rules as for the last namehttps://www.google.fr/search?client=ubuntu&channel=fs&q=jobteaser+telecom+bretagne&ie=utf-8&oe=utf-8&gfe_rd=cr&ei=joowV8rOMtLFaKWBsfAF
+		// Same rules as for the last name
 		checkStringLastName(a_firstname);
 
 	}
@@ -254,7 +256,7 @@ public class Subscriber implements Serializable {
 	 */
 	private static void checkStringUsername(String a_username)
 			throws BadParametersException {
-		if (a_username == null)https://www.google.fr/search?client=ubuntu&channel=fs&q=jobteaser+telecom+bretagne&ie=utf-8&oe=utf-8&gfe_rd=cr&ei=joowV8rOMtLFaKWBsfAF
+		if (a_username == null)
 			throw new BadParametersException("username not instantiated");
 
 		if (a_username.length() < LONG_USERNAME)
@@ -272,10 +274,15 @@ public class Subscriber implements Serializable {
 	
 	
 	
-	private void authenticateSubscriber(String password) 
-			throws AuthenticationException {
-		if (!this.password.equals(password))
-			throw new AuthenticationException("please verify the password");
+	public static void authenticateSubscriber(String username, String password) 
+			throws AuthenticationException, BadParametersException {
+			Subscriber subscriber=getSubscriberByUsername(username);
+			String userPassword=subscriber.getPassword();
+			if (password==null){
+				throw new AuthenticationException("enter user password");
+			}
+			if (!userPassword.equals(password))
+				throw new AuthenticationException("please verify the password");	
 	}
 	
 	
@@ -283,30 +290,16 @@ public class Subscriber implements Serializable {
 	
 	
 /*waiting for Competition*/
-	public void deleteBetsCompetition(Competition competition, String pwdSubs)
-			throws AuthenticationException, CompetitionException {
-		// Authenticate subscriber
-		authenticateSubscriber(pwdSubs);
-		// Delete bets if they are about the specified competition
-		ArrayList<Bet> betsToRemove = new ArrayList<Bet>();
-		for (Bet b : bets)
-			if (b.getCompetition().equals(competition)){
-				betsToRemove.add(b);
-				}
-		for (Bet b : betsToRemove){
-				b.delete();
-				}
-	}
 	
 	
-	public void changeSubsPwd(String currentPwd, String newPwd)
+	
+	public void changeSubsPwd(String username, String newPwd,String currentPwd)
 			throws BadParametersException, AuthenticationException {
 		// Authenticate Subscriber
-		authenticateSubscriber(currentPwd);
+		authenticateSubscriber(username,currentPwd);
 		// Change password
 		this.password = newPwd;
 		// Update to the database
-		if (DatabaseConnection.PERSISTENCE_ENABLED)
 			try {
 				SubscriberDAO.update(this);
 			} catch (SQLException e) {
@@ -314,11 +307,9 @@ public class Subscriber implements Serializable {
 			}
 	}
 
-	public Subscriber getSubscriberByUsername(String username)
-			throws BadParameterExeception{
+	public static Subscriber getSubscriberByUsername(String username)
+			throws BadParametersException{
 			Subscriber subscriber=null;
-
-		if (DatabaseConnection.PERSISTENCE_ENABLED)
 			try {
 				subscriber=SubscriberDAO.getSubscriberByUsername(username);
 			} catch (SQLException e) {
@@ -326,11 +317,9 @@ public class Subscriber implements Serializable {
 			}
 			return subscriber;
 	}
-	public Subscriber getSubscriberById(String username)
-			throws BadParameterExeception{
+	public static Subscriber getSubscriberById(String username)
+			throws BadParametersException{
 			Subscriber subscriber=null;
-
-		if (DatabaseConnection.PERSISTENCE_ENABLED)
 			try {
 				subscriber=SubscriberDAO.getSubscriberByUsername(username);
 			} catch (SQLException e) {

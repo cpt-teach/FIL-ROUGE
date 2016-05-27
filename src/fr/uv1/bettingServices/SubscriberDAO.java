@@ -1,78 +1,35 @@
-package fr.uv1.dao;
-
-import java.sql.*;
+package fr.uv1.bettingServices;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
-import fr.uv1.bettingServices.Bet.Bet;
-import fr.uv1.bettingServices.Compet.Competition;
-import fr.uv1.bettingServices.Compet.Competitor;
-import fr.uv1.bettingServices.Person.Subscriber;
-import fr.uv1.bettingServices.Betting.BettingSoft;
-import fr.uv1.bettingServices.Exceptions.AuthenticationException;
+import fr.uv1.bd.editBD;
+import fr.uv1.bd.selectBD;
 import fr.uv1.bettingServices.Exceptions.BadParametersException;
-import fr.uv1.bettingServices.Exceptions.CompetitionException;
-import fr.uv1.bettingServices.Exceptions.SubscriberException;
-import fr.uv1.utils.*;
+import fr.uv1.utils.MyCalendar;
 
-public class SubscriberDAO {
-	
-	
-	
-	//-----------------------------------------------------------------------------------------------------------
-		/**
-		 * Persist (store) a Subscriber in the data base.
-		 * 
-		 * @param Subscriber to be stored.
-		 * @return the Subscriber with the updated value for the id.
-		 * @throws SQLException
-		 */
-	
-	
+public class SubscriberDAO{
+
+	private static String url="jdbc:postgresql://localhost:54321/Test";
+	private static String user="postgres";
+	private static String password="postgres";
+
 	public static void persist(Subscriber subscriber) throws SQLException {
 
-		Connection c = DatabaseConnection.getConnection();
-		try {
-			// Persist the Subscriber
-			c.setAutoCommit(false);
-			
-			
-				PreparedStatement persistStatement = c.prepareStatement("insert into Subscriber(username,firstname,lastname,password,birthday,tokens values (?, ?, ?, ?, ?, ? )");
-				//persistStatement.setInt(1, l'ID du Subscriber);
-				persistStatement.setString(1,subscriber.getUserName());
-				persistStatement.setString(2,subscriber.getFirstName());
-				persistStatement.setString(3,subscriber.getLastName());
-				persistStatement.setString(4, subscriber.getPassword());
-				persistStatement.setString(5, subscriber.getBirthday().toString();
-				persistStatement.setLong(6, subscriber.getTokens());
-				persistStatement.executeUpdate();
-				persistStatement.close();
-			// Searching for the id_value of Subscriber
-			PreparedStatement psIdValue = c.prepareStatement("select currval('subscriber_id') as value_id");
-			ResultSet resultSet = psIdValue.executeQuery();
-			Integer id  = null;
+		String request="insert into Subscriber(username,firstname,lastname,password,birthday,tokens values ("+subscriber.getUserName()+","
+				+subscriber.getFirstName()+", "
+				+subscriber.getLastName()+", "
+				+subscriber.getPassword()+","
+				+subscriber.getBirthday().toString()+", "
+				+subscriber.getTokens()+");";
+		editBD.edit(user,password,url, request);
+			request="select currval('subscriber_id') as value_id";
+			ResultSet resultSet=selectBD.select(user,password,url,request);
+			int id  = 0;
 			while(resultSet.next())
 				id = resultSet.getInt("value_id");
-			resultSet.close();
-			psIdValue.close();
-			c.commit();
-			Subscriber.setSubscriber_id(id);
 
-		}}
-		catch (SQLException e) {
-			try {
-				c.rollback();
-			}
-			catch (SQLException e1) {
-				e1.printStackTrace();
-			}
-			c.setAutoCommit(true);
-			throw e;
-		}
-
-		c.setAutoCommit(true);
-		c.close();
-
-		
+			subscriber.setSubscriber_id(id);		
 	}
 	
 	
@@ -80,16 +37,14 @@ public class SubscriberDAO {
 	   * Here Finding All bets in the database,
 	   * @return the list of the bets instances
 	   * @throws SQLException
+	 * @throws BadParametersException 
 	   */
 	
-	public static ArrayList<Subscriber> listOfSubscribers() throws SQLException {
+	public static ArrayList<Subscriber> listOfSubscribers() throws SQLException, BadParametersException{
 		  
 		// Get a database connection.
-	    Connection c = DatabaseConnection.getConnection();
-	    
-	    // Retrieve the subscribers.
-	    PreparedStatement psSelect = c.prepareStatement("select * from subscriber order by subscriber_id");
-	    ResultSet resultSet = psSelect.executeQuery();
+	    String request="select * from subscriber order by subscriber_id;";
+	    ResultSet resultSet=selectBD.select(user,password,url,request);
 	    ArrayList<Subscriber> listOfSubscribers = new ArrayList<Subscriber>();
 	    while(resultSet.next()) {
 	    	Subscriber subscriber = null;
@@ -99,17 +54,10 @@ public class SubscriberDAO {
 	    				resultSet.getString("lastname"),
 	    				resultSet.getString("firstname"),
 	    				resultSet.getLong("tokens"),
-	    				fromStringtoCalendar(resultSet.getString("birthdate")) 
-	    				);// TODO Function
-
+	    				MyCalendar.fromString(resultSet.getString("birthdate")) 
+	    				);
 	    	listOfSubscribers.add(subscriber);
-	    }
-	    resultSet.close();
-	    psSelect.close();
-	    
-	    // Closing the database connection.
-	    c.close();
-	    
+	    }	    
 	    return listOfSubscribers;
 	  }
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -123,24 +71,14 @@ public class SubscriberDAO {
 	   */
 	public static void update(Subscriber subscriber) throws SQLException {
 		  
-	    // Get a database connection.
-	    Connection c = DatabaseConnection.getConnection();
+	    	String request="update subscriber set  username="+subscriber.getUserName()+"," +
+	    			" password="+subscriber.getPassword()+"," +
+					"lastname="+subscriber.getLastName()+"," +
+							"firstname="+subscriber.getFirstName()+"," +
+									"tokens="+subscriber.getTokens()+"," +
+											"birthdate="+subscriber.getBirthday().toString()+" where subscriber_id="+subscriber.getSubscriber_id()+";";
 
-	    // Update the bet.
-	    	PreparedStatement updateStatement = c.prepareStatement("update subscriber set  username=?, password=?,lastname=?,firstname=?,tokens=?,birthdate=? where subscriber_id=? ");
-	    	updateStatement.setString(1,subscriber.getUserName());
-			updateStatement.setString(2, subscriber.getPassword());
-			updateStatement.setString(3, subscriber.getLastName());
-			updateStatement.setString(4, subscriber.getFirstName());
-			updateStatement.setLong(5,subscriber.getTokens());
-			updateStatement.setString(6, Subscriber.getBirthday().toString());
-			updateStatement.setInt(7, subscriber.getSubscriber_id());
-			updateStatement.executeUpdate();
-			updateStatement.close();
-
-		
-	    // Closing the database connection.
-	    c.close();
+	    	editBD.edit(user,password,url, request);
 	  }
 
 	
@@ -153,26 +91,16 @@ public class SubscriberDAO {
 	
 	public static void delete(Subscriber subscriber) throws SQLException {
 		  
-		// Get a database connection.
-	    Connection c = DatabaseConnection.getConnection();
-	    
+	    	String request="delete from subscriber where subscriber_id="+subscriber.getSubscriber_id()+";";
 	    // Delete the bet.
-	    PreparedStatement deleteStaement = c.prepareStatement("delete from subscriber where subscriber_id=?");
-	    deleteStaement.setInt(1, subscriber.getSubscriber_id());
-	    deleteStaement.executeUpdate();
-	    deleteStaement.close();
-
+	    	editBD.edit(user,password,url, request);
 	    // Closing the database connection.
-	    c.close();
 	  }
-	public static Subscriber getSubscriberById(int subscriber_id){
+	public static Subscriber getSubscriberById(int subscriber_id) throws BadParametersException, SQLException{
 		
-		Connection c = DatabaseConnection.getConnection();
-	
-		PreparedStatement psSelect = c.prepareStatement("select * from subscriber where subscriber_id="+subscriber_id+);
-		ResultSet resultSet = psSelect.executeQuery();
+		String request="select * from subscriber where subscriber_id="+subscriber_id+";";
+		ResultSet resultSet=selectBD.select(user,password,url,request);
 		Subscriber subscriber=null;
-		
 		while(resultSet.next()) {
 	    		subscriber = new Subscriber(resultSet.getInt("subscriber_id"),
 	    				resultSet.getString("username"),
@@ -180,26 +108,17 @@ public class SubscriberDAO {
 	    				resultSet.getString("lastname"),
 	    				resultSet.getString("firstname"),
 	    				resultSet.getLong("tokens"),
-	    				fromStringtoCalendar(resultSet.getString("birthdate")) 
+	    				MyCalendar.fromString(resultSet.getString("birthdate")) 
 	    				);
-	    		//TODO Function
 		}
 		
-		resultSet.close();
-	    psSelect.close();
-	    
-	    // Closing the database connection.
-	    c.close();
-	    
 	    return subscriber;
 	}
-	public static Subscriber getSubscriberByUsername(String username){
-		Connection c = DatabaseConnection.getConnection();
+	public static Subscriber getSubscriberByUsername(String username) throws BadParametersException, SQLException{
 	
-		PreparedStatement psSelect = c.prepareStatement("select * from subscriber where username="+username);
-		ResultSet resultSet = psSelect.executeQuery();
+		String request="select * from subscriber where subscriber_id="+username+";";
+		ResultSet resultSet=selectBD.select(user,password,url,request);
 		Subscriber subscriber=null;
-		
 		while(resultSet.next()) {
 	    		subscriber = new Subscriber(resultSet.getInt("subscriber_id"),
 	    				resultSet.getString("username"),
@@ -207,17 +126,13 @@ public class SubscriberDAO {
 	    				resultSet.getString("lastname"),
 	    				resultSet.getString("firstname"),
 	    				resultSet.getLong("tokens"),
-	    				fromStringtoCalendar(resultSet.getString("birthdate")) 
+	    				MyCalendar.fromString(resultSet.getString("birthdate")) 
 	    				);
 		}
 		
-		resultSet.close();
-	    psSelect.close();
-	    
-	    // Closing the database connection.
-	    c.close();
 	    return subscriber;
 	    
 	}
+	}
 	
-}
+
