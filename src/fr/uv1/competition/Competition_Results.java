@@ -17,7 +17,6 @@ public class Competition_Results {
 	private Participation podium1;
 	private Participation podium2;
 	private Participation podium3;
-	
 	private int Competition_Id;
 	
 	public Competition_Results(Participation podium1, Participation podium2, Participation podium3, int Competition_Id){
@@ -63,41 +62,15 @@ public class Competition_Results {
 	
 		//Autres méthodes
 		
-	public int IsPodium(Participation id){
-	if(id.getId()==podium1.getId())  //getId est une méthode de la classe Participation
+	public int IsPodium(Participation id) { // return the rank of the participatioon in the podium or -1 if not in podium
+	if(id.getTeamId()==podium1.getTeamId())  //getId est une méthode de la classe Participation
 		return 1;
-	else if(id.getId()==podium2.getId())  //getId est une méthode de la classe Participation
+	else if(id.getTeamId()==podium2.getTeamId())  //getId est une méthode de la classe Participation
 		return 2;
-	else if(id.getId()==podium3.getId())  //getId est une méthode de la classe Participation
+	else if(id.getTeamId()==podium3.getTeamId())  //getId est une méthode de la classe Participation
 		return 3;
 	else
 		return -1;
 	}
-	public static java.util.ArrayList<String> consultResultsCompetition(java.lang.String competition)
-                                                          throws SQLException{
-               	ArrayList<String> List = new ArrayList<String>(); // ArrayList<Competitor> List = new ArrayList<Competitor>;
-	  	//Check if all the parameters are valid
-		//competition
-		competition_object = getCompetitionByName(competition); // doit être impélmentée par le lot1
-		if(competition_object == null)
-			throw new ExistingCompetitionException("The competition named does not exist");
-		
-        List = ResultCompetition (competition_object);
-		} }
-		return List;
-		}
 
-		competition = getCompetitionByName(competitionName); // methode de la classe competition
-		
-		
-		//Vérifier que les competitors
-		competitors = competition.getListCompetitors();
-		if(findCompetitor(winner) == null || findCompetitor(second) == null || findCompetitor(third)== null) // find competitor est une méthode de competitors
-			printf("Il ya une erreur sur les competitors");
-	
-			
-		// Calcul des jetons et créditer les winners.
-	  		  	
-	}
-
-	
+}

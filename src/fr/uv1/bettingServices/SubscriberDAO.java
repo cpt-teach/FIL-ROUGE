@@ -10,12 +10,15 @@ import fr.uv1.utils.MyCalendar;
 
 public class SubscriberDAO{
 
-	private static String url="jdbc:postgresql://localhost:54321/Test";
+	private static String url="jdbc:postgresql://localhost:5433/tests";
 	private static String user="postgres";
 	private static String password="postgres";
+	
+	public SubscriberDAO () {
+		
+	}
 
-	public static void persist(Subscriber subscriber) throws SQLException {
-
+	public void persist(Subscriber subscriber) throws SQLException {
 		String request="insert into Subscriber(username,firstname,lastname,password,birthday,tokens values ("+subscriber.getUserName()+","
 				+subscriber.getFirstName()+", "
 				+subscriber.getLastName()+", "
@@ -40,7 +43,7 @@ public class SubscriberDAO{
 	 * @throws BadParametersException 
 	   */
 	
-	public static ArrayList<Subscriber> listOfSubscribers() throws SQLException, BadParametersException{
+	public ArrayList<Subscriber> listOfSubscribers() throws SQLException, BadParametersException{
 		  
 		// Get a database connection.
 	    String request="select * from subscriber order by subscriber_id;";
@@ -69,7 +72,7 @@ public class SubscriberDAO{
 	   * @param subscriber to be updated
 	   * @throws SQLException
 	   */
-	public static void update(Subscriber subscriber) throws SQLException {
+	public void update(Subscriber subscriber) throws SQLException {
 		  
 	    	String request="update subscriber set  username="+subscriber.getUserName()+"," +
 	    			" password="+subscriber.getPassword()+"," +

@@ -57,6 +57,7 @@ public class Subscriber implements Serializable {
 	 */
 	public Subscriber(String a_username, String a_name, String a_firstName, MyCalendar a_birthday)
 			throws BadParametersException {
+		SubscriberDAO dao = new SubscriberDAO();
 		this.subscriber_id=0;
 		this.setLastname(a_name);
 		this.setFirstname(a_firstName);
@@ -65,7 +66,7 @@ public class Subscriber implements Serializable {
 		this.setPassword(RandPass.getPass(Constraints.LONG_PWD));
 		this.setbirthday(a_birthday);
 				try {
-					SubscriberDAO.persist(this);
+					dao.persist(this);
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
@@ -293,27 +294,28 @@ public class Subscriber implements Serializable {
 	
 	
 	
-	public void changeSubsPwd(String username, String newPwd,String currentPwd)
+	public static void changeSubsPwd(String username, String newPwd,String currentPwd)
 			throws BadParametersException, AuthenticationException {
+		SubscriberDAO dao = new SubscriberDAO();
 		// Authenticate Subscriber
 		authenticateSubscriber(username,currentPwd);
 		// Change password
-		this.password = newPwd;
+		getSubscriberByUsername(username).password = newPwd;
 		// Update to the database
 			try {
-				SubscriberDAO.update(this);
-			} catch (SQLException e) {
-				e.printStackTrace();
+				dao.update(getSubscriberByUsername(username));
+			} catch (SQLException exception) {
+				exception.printStackTrace();
 			}
 	}
 
 	public static Subscriber getSubscriberByUsername(String username)
-			throws BadParametersException{
-			Subscriber subscriber=null;
+			throws BadParametersException {
+			Subscriber subscriber = null;
 			try {
 				subscriber=SubscriberDAO.getSubscriberByUsername(username);
-			} catch (SQLException e) {
-				e.printStackTrace();
+			} catch (SQLException exception) {
+				exception.printStackTrace();
 			}
 			return subscriber;
 	}
@@ -322,8 +324,8 @@ public class Subscriber implements Serializable {
 			Subscriber subscriber=null;
 			try {
 				subscriber=SubscriberDAO.getSubscriberByUsername(username);
-			} catch (SQLException e) {
-				e.printStackTrace();
+			} catch (SQLException exception) {
+				exception.printStackTrace();
 			}
 			return subscriber;
 	}
