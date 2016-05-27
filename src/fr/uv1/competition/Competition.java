@@ -9,6 +9,7 @@ import fr.uv1.bettingServices.Exceptions.*;
 
 
 public class Competition {
+	protected int id;
 	protected String name;
 	protected String sport;
 	protected MyCalendar endDate;
@@ -17,21 +18,39 @@ public class Competition {
 	// Constructors 
 	// The list of competitors is not given (new competition)
 	
-	public Competition(String name, String sport, MyCalendar endDate) throws BadParametersException, ExistingCompetitionException {
+	public Competition(String name, String sport, MyCalendar endDate) throws BadParametersException, ExistingCompetitionException, SQLException {
+		this.id = CompetitionDAO.getIdMax(); 
 		this.setName(name);
 		this.sport = sport;
 		this.endDate = endDate;
 		this.competitors = new ArrayList<Competitor>();
-		CompetitionDAO.addCompetition(this);
-	}
+		this.addToCompetition();
+		}
+	
 	// The list of competitors is given
-	public Competition(String name, String sport, List<Competitor> competitors, MyCalendar endDate) throws BadParametersException, ExistingCompetitionException {
+	public Competition(String name, String sport, List<Competitor> competitors, MyCalendar endDate) throws BadParametersException, ExistingCompetitionException, SQLException {
 		this.setName(name);
 		this.sport = sport;
 		this.endDate = endDate;
 		this.competitors = competitors;
-		CompetitionDAO.addCompetition(this);
+		this.addToCompetition();
 	}
+	
+	
+	// DAO interactions
+	
+	public static List<Competition> listCompetitions() throws SQLException {
+		return fr.uv1.competition.CompetitionDAO.listCompetitions();
+	}
+	
+	public  void addToCompetition() throws ExistingCompetitionException, SQLException {
+		CompetitionDAO.persist(this);
+	}
+	
+	public void cancelThisCompetition(Competition competition) throws ExistingCompetitionException, SQLException {
+		CompetitionDAO.delete(this);
+	}
+	
 	
 	//Basic getters and setters
 	
@@ -39,17 +58,22 @@ public class Competition {
 		return name;
 	}
 	
-	public java.util.Collection<Competitor>  getCompetitors() {
+	/*public java.util.Collection<Competitor>  getCompetitors() {
 		return this.competitors;
-	}
+	}*/
 	
-	public int getId() throws SQLException {
+	public int getIdbd() throws SQLException {
 		System.out.println(this.endDate);
 		 ResultSet result = selectBD.select("postgres","postgres", "jdbc:postgresql://localhost:5433/tests",
 				 "SELECT * FROM competition WHERE  name = '"+ this.name +"' AND sport ='"+ this.sport+"' AND endDate = '" + this.endDate.toString2()+"'");
 		result.next();
 		return result.getInt(1);
 	}
+	
+	public int getId() {
+		return id;
+	}
+	
 	
 	public void setName(String name) throws BadParametersException {
 		if (!Utilitary.isValidName(name)) { throw new BadParametersException("invalid name");}
@@ -62,7 +86,13 @@ public class Competition {
 	public void setSport(String sport){
 		this.sport=sport;
 	}
+	public List<Competitor> getCompetitors() {
+		return competitors;
+	}
+	
+	
 
+	
 	public static Competition getCompetitionByName(String Competition_name)throws SQLException, BadParametersException, ExistingCompetitorException, ExistingCompetitionException, NotATeamException{ // TODO in DAO
 		Competition competition = null;
 		ResultSet result = selectBD.select("postgres","postgres","jdbc:postgresql://localhost:5433/tests", "SELECT * FROM competition WHERE name LIKE '"+Competition_name+"';");
@@ -114,19 +144,31 @@ public class Competition {
 	//Main methods of the class
 	
 	
-	// Adds a competitor to this competition
+	/** Adds a competitor to this competition
+	 * 
+	 * @param competitor
+	 * @throws ExistingCompetitorException
+	 */
+	
 	public void addCompetitor(Competitor competitor) throws ExistingCompetitorException {
 		if (competitors.contains(competitor)){ throw new ExistingCompetitorException();	}
 		else { competitors.add(competitor); }
 	}
 	
-	// Deletes a competitor from this competition
+	/** Deletes a competitor from this competition
+	 * 
+	 * @param competitor
+	 * @throws ExistingCompetitorException
+	 */
 	public void deleteCompetitor(Competitor competitor) throws ExistingCompetitorException {
 		if (! competitors.contains(competitor)){ throw new ExistingCompetitorException(); }
 		else { competitors.remove(competitor); }
 	}
 	
-	// Returns the list of competitors in this competition
+	/** Returns the list of competitors in this competition
+	 * 
+	 * @return Returns the list of the competitors of this competition
+	 */
 	public static java.util.Collection<Competitor> listCompetitors(String competition)throws ExistingCompetitorException, ExistingCompetitionException, CompetitionException, NotATeamException, SQLException, BadParametersException { // BS
 		return getCompetitionByName(competition).getCompetitors();
 	}
@@ -142,11 +184,11 @@ public class Competition {
 	}
 
 	
-	public static void main (String [] arg ) throws SQLException, BadParametersException, ExistingCompetitorException, ExistingCompetitionException,NotATeamException {
+	/*public static void main (String [] arg ) throws SQLException, BadParametersException, ExistingCompetitorException, ExistingCompetitionException,NotATeamException {
 		Competition comp = getCompetitionByName("garros");
 		System.out.println(comp.getName());
 		System.out.println(comp.getId());
-	}
+	}*/
 
 	
 }
