@@ -1,15 +1,4 @@
 package fr.uv1.competition;
-import fr.uv1.bd.selectBD;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Iterator;
-import java.util.List;
 import fr.uv1.bettingServices.*;
 
 public class Competition_Results {
@@ -62,41 +51,14 @@ public class Competition_Results {
 	
 		//Autres méthodes
 		
-<<<<<<< HEAD
-	public int IsPodium(Participation id) { // return the rank of the participatioon in the podium or -1 if not in podium
-	if(id.getTeamId()==podium1.getTeamId())  //getId est une méthode de la classe Participation
-		return 1;
-	else if(id.getTeamId()==podium2.getTeamId())  //getId est une méthode de la classe Participation
-		return 2;
-	else if(id.getTeamId()==podium3.getTeamId())  //getId est une méthode de la classe Participation
-=======
-	public int IsPodium(Participation id){
+	public int IsPodium(Participation id){ // return the rank of the participatioon in the podium or -1 if not in podium
 	if(id.getParticipationId()==podium1.getParticipationId())  //getId est une méthode de la classe Participation
 		return 1;
 	else if(id.getParticipationId()==podium2.getParticipationId())  //getId est une méthode de la classe Participation
 		return 2;
 	else if(id.getParticipationId()==podium3.getParticipationId())  //getId est une méthode de la classe Participation
->>>>>>> 56298b4421d37e6654699abf091eae5cee47ba77
 		return 3;
 	else
 		return -1;
 	}
-<<<<<<< HEAD
-=======
-	public static java.util.ArrayList<String> consultResultsCompetition(java.lang.String competition)
-                                                          throws SQLException{
-               	ArrayList<String> List = new ArrayList<String>(); // ArrayList<Competitor> List = new ArrayList<Competitor>;
-	  	//Check if all the parameters are valid
-		//competition
-        Competition competition_object = new Competition();
-		competition_object = Competition.getCompetitionByName(competition); // doit être impélmentée par le lot1
-		if(competition_object == null)
-			throw new ExistingCompetitionException("The competition named does not exist");
-		
-        List = ResultCompetition (competition_object);
-		} }
-		return List;
-		}
->>>>>>> 56298b4421d37e6654699abf091eae5cee47ba77
-
 }
