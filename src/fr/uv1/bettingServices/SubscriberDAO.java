@@ -24,8 +24,7 @@ public class SubscriberDAO{
 				+subscriber.getLastName()+"', '"
 				+subscriber.getPassword()+"','"
 				+subscriber.getBirthday().toString2()+"','"
-				+subscriber.getTokens()+"');";
-		System.out.println(request);
+				+subscriber.getTokens()+"');";;
 		editBD.edit(user,password,url, request);
 			request="select subscriber_id FROM subscriber WHERE username='"+subscriber.getUserName()+"';";
 			ResultSet resultSet=selectBD.select(user,password,url,request);
@@ -35,6 +34,7 @@ public class SubscriberDAO{
 
 			subscriber.setSubscriber_id(id);		
 	}
+	
 	
 	
 	/**
@@ -58,7 +58,7 @@ public class SubscriberDAO{
 	    				resultSet.getString("lastname"),
 	    				resultSet.getString("firstname"),
 	    				resultSet.getLong("tokens"),
-	    				MyCalendar.fromString(resultSet.getString("birthdate")) 
+	    				MyCalendar.fromString(resultSet.getString("birthday")) 
 	    				);
 	    	listOfSubscribers.add(subscriber);
 	    }	    
@@ -74,13 +74,12 @@ public class SubscriberDAO{
 	   * @throws SQLException
 	   */
 	public void update(Subscriber subscriber) throws SQLException {
-		  
-	    	String request="update subscriber set  username="+subscriber.getUserName()+"," +
-	    			" password="+subscriber.getPassword()+"," +
-					"lastname="+subscriber.getLastName()+"," +
-							"firstname="+subscriber.getFirstName()+"," +
-									"tokens="+subscriber.getTokens()+"," +
-											"birthdate="+subscriber.getBirthday().toString2()+" where subscriber_id="+subscriber.getSubscriber_id()+";";
+	    	String request="update subscriber set  username='"+subscriber.getUserName()+"'," +
+	    			" password='"+subscriber.getPassword()+"'," +
+					"lastname='"+subscriber.getLastName()+"'," +
+							"firstname='"+subscriber.getFirstName()+"'," +
+									"tokens='"+subscriber.getTokens()+"'," +
+											"birthday='"+subscriber.getBirthday().toString2()+"' where subscriber_id='"+subscriber.getSubscriber_id()+"';";
 
 	    	editBD.edit(user,password,url, request);
 	  }
@@ -95,14 +94,14 @@ public class SubscriberDAO{
 	
 	public static void delete(Subscriber subscriber) throws SQLException {
 		  
-	    	String request="delete from subscriber where subscriber_id="+subscriber.getSubscriber_id()+";";
+	    	String request="delete from subscriber where subscriber_id='"+subscriber.getSubscriber_id()+"';";
 	    // Delete the bet.
 	    	editBD.edit(user,password,url, request);
 	    // Closing the database connection.
 	  }
 	public static Subscriber getSubscriberById(int subscriber_id) throws BadParametersException, SQLException{
 		
-		String request="select * from subscriber where subscriber_id="+subscriber_id+";";
+		String request="select * from subscriber where subscriber_id='"+subscriber_id+"';";
 		ResultSet resultSet=selectBD.select(user,password,url,request);
 		Subscriber subscriber=null;
 		while(resultSet.next()) {
@@ -112,7 +111,7 @@ public class SubscriberDAO{
 	    				resultSet.getString("lastname"),
 	    				resultSet.getString("firstname"),
 	    				resultSet.getLong("tokens"),
-	    				MyCalendar.fromString(resultSet.getString("birthdate")) 
+	    				MyCalendar.fromString(resultSet.getString("birthday")) 
 	    				);
 		}
 		
@@ -120,7 +119,7 @@ public class SubscriberDAO{
 	}
 	public static Subscriber getSubscriberByUsername(String username) throws BadParametersException, SQLException{
 	
-		String request="select * from subscriber where subscriber_id='"+username+"';";
+		String request="select * from subscriber where username LIKE '"+username+"';";
 		ResultSet resultSet=selectBD.select(user,password,url,request);
 		Subscriber subscriber=null;
 		while(resultSet.next()) {
@@ -130,8 +129,9 @@ public class SubscriberDAO{
 	    				resultSet.getString("lastname"),
 	    				resultSet.getString("firstname"),
 	    				resultSet.getLong("tokens"),
-	    				MyCalendar.fromString(resultSet.getString("birthdate")) 
+	    				MyCalendar.fromString(resultSet.getString("birthday"))
 	    				);
+
 		}
 		
 	    return subscriber;

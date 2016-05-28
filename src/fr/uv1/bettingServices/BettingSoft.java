@@ -23,7 +23,7 @@ public class BettingSoft {
 	private ArrayList<Competitor> competitors;
 	private Subscriber subs;
   
-// -- LOT 3--
+// -- LOT 3------------------------------------------------------
 	
 	
 		public void authenticateMngr(String managerPassword) throws AuthenticationException {
@@ -242,7 +242,7 @@ public class BettingSoft {
 			return competition;
 }
 
-// -- LOT 2--	
+// -- LOT 2--------------------------------------------------------
 		
 		
 	public ArrayList<Subscriber> listSubscribers(String managerPwd) throws AuthenticationException, BadParametersException{ 
@@ -362,6 +362,22 @@ public class BettingSoft {
 		   return bets;
 	}
 	
+	/*public static ArrayList<String> consultBetsCompetition(String competition)
+			throws ExistingCompetitionException {
+		// look if the name given match a competition in the db
+		Competition competition = getCompetitionByName(competition);// another betting soft method
+		if (competition == null)
+			throw new ExistingCompetitionException("Competition with name " + competition + " does not exist");
+		// Consult the bets
+		  ArrayList<Bet> bets = BetDAO.consult(competition);
+		  ArrayList<String> consultbets =new ArrayList<String>();
+		  for (Bet b: bets){
+			  String Pathkaml="bet_Id"+b.getId()+"in this competition"+competition+",the competitors"+b.getfirst()+","+b.getsecond()+","
+		  +b.getthird()+"made by the Subscriber"+b.getBettor().getSubscriberId();
+			  consultbets.add(Pathkaml);}
+		  return consultbets;
+	}*/
+	
 	public void betOnPodium(long tokens, String competitionName,
 			Competitor winner, Competitor second, Competitor third,
 			String username, String pwdSubs) throws ExistingSubscriberException, CompetitionException, SubscriberException, BadParametersException, AuthenticationException, SQLException, NotATeamException, ExistingCompetitorException, ExistingCompetitionException, BadParametersException{
@@ -464,9 +480,22 @@ public class BettingSoft {
 		
 	}
 	
+	public void addCompetition(java.lang.String competition,
+			   MyCalendar closingDate,
+			   List<Competitor> competitors,
+			   java.lang.String managerPwd) throws AuthenticationException,
+							                       ExistingCompetitionException,
+							                       CompetitionException,
+							                       BadParametersException,
+							                       SQLException {
+		Competition competition_object = new Competition( competition , "", competitors , closingDate);
+		CompetitionDAO.persist(competition_object);
+		
+		}
 	
 	
-//--LOT 1--
+	
+//--LOT 1------------------------------------------------------------------------
 	
 	/** Returns the list of competitors in this competition
 	 * 
@@ -502,16 +531,4 @@ public class BettingSoft {
 		else { competitors.remove(competitor); }
 	}
 	
-	public void addCompetition(java.lang.String competition,
-            				   MyCalendar closingDate,
-            				   List<Competitor> competitors,
-            				   java.lang.String managerPwd) throws AuthenticationException,
-											                       ExistingCompetitionException,
-											                       CompetitionException,
-											                       BadParametersException,
-											                       SQLException {
-		Competition competition_object = new Competition( competition , "", competitors , closingDate);
-		CompetitionDAO.persist(competition_object);
-		
-	}
 }
