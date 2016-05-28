@@ -235,12 +235,10 @@ public class BettingSoft {
 			return competition;
 }
 
-<<<<<<< HEAD
+
 		
-// -- LOT 2--	
-=======
 // -- LOT 2--------------------------------------------------------
->>>>>>> 9009062a212fb9708c323246f68f0a00a6b147cd
+
 		
 		
 	public ArrayList<Subscriber> listSubscribers(String managerPwd) throws AuthenticationException, BadParametersException{ 
@@ -360,7 +358,7 @@ public class BettingSoft {
 		   return bets;
 	}
 	
-<<<<<<< HEAD
+
 	public static ArrayList<String> consultBetsCompetition(String competition)
 			throws ExistingCompetitionException, SQLException, BadParametersException, ExistingCompetitorException, NotATeamException {
 		// look if the name given match a competition in the db
@@ -376,23 +374,6 @@ public class BettingSoft {
 			  consultbets.add(Pathkaml);}
 		  return consultbets;
 	}
-=======
-	/*public static ArrayList<String> consultBetsCompetition(String competition)
-			throws ExistingCompetitionException {
-		// look if the name given match a competition in the db
-		Competition competition = getCompetitionByName(competition);// another betting soft method
-		if (competition == null)
-			throw new ExistingCompetitionException("Competition with name " + competition + " does not exist");
-		// Consult the bets
-		  ArrayList<Bet> bets = BetDAO.consult(competition);
-		  ArrayList<String> consultbets =new ArrayList<String>();
-		  for (Bet b: bets){
-			  String Pathkaml="bet_Id"+b.getId()+"in this competition"+competition+",the competitors"+b.getfirst()+","+b.getsecond()+","
-		  +b.getthird()+"made by the Subscriber"+b.getBettor().getSubscriberId();
-			  consultbets.add(Pathkaml);}
-		  return consultbets;
-	}*/
->>>>>>> 9009062a212fb9708c323246f68f0a00a6b147cd
 	
 	public void betOnPodium(long tokens, String competitionName,
 			Competitor winner, Competitor second, Competitor third,
