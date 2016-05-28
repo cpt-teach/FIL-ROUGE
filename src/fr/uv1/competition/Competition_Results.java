@@ -17,46 +17,46 @@ public class Competition_Results {
 		
 		//Definition des setteurs
 	public void setFirst(Participation first){
-	this.podium1 = first;
+		this.podium1 = first;
 	} 
 	
 	public void setSecond(Participation second){
-	this.podium2 = second;
+		this.podium2 = second;
 	} 
 	
 	public void setThird(Participation third){
-	this.podium3 = third;
+		this.podium3 = third;
 	} 
 	
 	public void setCompetition(int Competition_Id){
-	this.Competition_Id = Competition_Id;
+		this.Competition_Id = Competition_Id;
 	} 
 		//Definition des getteurs
 		
 	public Participation getFirst(){
-	return this.podium1;
+		return this.podium1;
 	}
 	
 	public Participation getSecond(){
-	return this.podium2;
+		return this.podium2;
 	}
 	
 	public Participation getThird(){
-	return this.podium3;
+		return this.podium3;
 	}
 	
 	public int getCompetition(){
-	return this.Competition_Id;
+		return this.Competition_Id;
 	}
 	
 		//Autres methods
 		
 	public int IsPodium(Participation id){ // return the rank of the participatioon in the podium or -1 if not in podium
-	if(id.getParticipationId()==podium1.getParticipationId())  //getId est une méthode de la classe Participation
+	if(id.getParticipationId()==podium1.getParticipationId())  
 		return 1;
-	else if(id.getParticipationId()==podium2.getParticipationId())  //getId est une méthode de la classe Participation
+	else if(id.getParticipationId()==podium2.getParticipationId()) 
 		return 2;
-	else if(id.getParticipationId()==podium3.getParticipationId())  //getId est une méthode de la classe Participation
+	else if(id.getParticipationId()==podium3.getParticipationId())  
 		return 3;
 	else
 		return -1;
