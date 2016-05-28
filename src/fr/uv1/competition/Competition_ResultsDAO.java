@@ -74,7 +74,7 @@ public class Competition_ResultsDAO {
 	    ResultSet resultIndividual = selectBD.select(user,password,url,requestIndividual );
 	    Competitor test = null;
 	    if (resultTeam.next()) {
-	    	test = new Team(resultTeam.getString(2));
+	    	test = new Team(resultTeam.getString(2),resultTeam.getString(3));
 	    }
 	    if (resultIndividual.next()) {
 	    	test = new Individual(resultIndividual.getString(2),resultIndividual.getString(3),resultIndividual.getString(4));

@@ -17,7 +17,7 @@ public class Team implements Competitor{
 	protected List<Competitor> members;
 
 	
-	public Team(String name) 
+	public Team(String name, String sport) 
 			throws BadParametersException, ExistingCompetitorException, ExistingCompetitionException, SQLException {
 		this.id = TeamDAO.getIdMax();
 		this.setName(name);

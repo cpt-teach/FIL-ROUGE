@@ -26,17 +26,17 @@ public class BettingSoft {
 			if (!this.managerPassword.equals(managerPassword))
 				throw new AuthenticationException("Incorrect password ");		
 		}
-	
-		public void settleWinner(java.lang.String competition, 
+		
+		public void settleWinner(String competition, 
 								 Competitor winner, 
-								 java.lang.String managerPwd) throws AuthenticationException,
-																	 ExistingCompetitionException,
-																	 CompetitionException,
-																	 BadParametersException,
-																	 SQLException,
-																	 NotATeamException,
-																	 ExistingCompetitorException,
-																	 ExistingSubscriberException   {	
+								 String managerPwd) throws AuthenticationException,
+														   ExistingCompetitionException,
+														   CompetitionException,
+														   BadParametersException,
+														   SQLException,
+														   NotATeamException,
+														   ExistingCompetitorException,
+														   ExistingSubscriberException   {	
 				
 		       // First we authenticate the manager
 				this.authenticateMngr(managerPwd);
@@ -172,14 +172,14 @@ public class BettingSoft {
 
 		
 
-		public static java.util.ArrayList<Competitor> consultResultsCompetition(java.lang.String competition)
-	            throws AuthenticationException,
-	     	   ExistingCompetitionException,
-	     	   CompetitionException,
-				   BadParametersException,
-				   SQLException,
-				   NotATeamException,
-				   ExistingCompetitorException{
+		public static ArrayList<Competitor> consultResultsCompetition(
+				String competition) throws AuthenticationException,
+										   ExistingCompetitionException,
+										   CompetitionException,
+										   BadParametersException,
+										   SQLException,
+										   NotATeamException,
+										   ExistingCompetitorException {
 			Competition_ResultsDAO dao = new Competition_ResultsDAO();
 			//Check if all the parameters are valid
 			//competition
@@ -197,13 +197,13 @@ public class BettingSoft {
 			}
 			
 		
-		public void deleteCompetition(java.lang.String competition, 
-										java.lang.String managerPwd) throws AuthenticationException,
-																			SQLException,
-																			BadParametersException, 
-																			ExistingCompetitorException, 
-																			ExistingCompetitionException, 
-																			NotATeamException {
+		public void deleteCompetition(String competition, 
+									  String managerPwd) throws AuthenticationException,
+																SQLException,
+																BadParametersException, 
+																ExistingCompetitorException, 
+																ExistingCompetitionException, 
+																NotATeamException {
 			authenticateMngr(managerPwd);
 			Competition competition_object = getCompetitionByName(competition);
 			if(competition == null) {
@@ -213,13 +213,13 @@ public class BettingSoft {
 		}
 		
 		
-		public void cancelCompetition(java.lang.String competition,
-									  java.lang.String managerPwd) throws AuthenticationException,
-																		  SQLException,
-																		  BadParametersException, 
-																		  ExistingCompetitorException, 
-																		  ExistingCompetitionException, 
-																		  NotATeamException {
+		public void cancelCompetition(String competition,
+									  String managerPwd ) throws AuthenticationException,
+															     SQLException,
+															     BadParametersException, 
+																 ExistingCompetitorException, 
+																 ExistingCompetitionException, 
+																 NotATeamException {
 			deleteCompetition(competition, managerPwd);
 			
 		}
@@ -234,14 +234,24 @@ public class BettingSoft {
 			Competition competition = CompetitionDAO.selectCompetitionByName(Competition_name);
 			return competition;
 }
-
-
+		
+		public Competitor createCompetitor(String name, String managerPwd) throws AuthenticationException,
+					   															  BadParametersException, 
+					   															  ExistingCompetitorException, 
+					   															  ExistingCompetitionException, 
+					   															  SQLException{
+			
+			authenticateMngr(managerPwd);
+			Team newCompetitor = new Team(name,"");	
+			return newCompetitor;
+		}
 		
 // -- LOT 2--------------------------------------------------------
 
 		
 		
-	public ArrayList<Subscriber> listSubscribers(String managerPwd) throws AuthenticationException, BadParametersException{ 
+	public ArrayList<Subscriber> listSubscribers(String managerPwd) throws AuthenticationException, 
+																		   BadParametersException { 
 		SubscriberDAO dao = new SubscriberDAO();
 		this.authenticateMngr(managerPwd);
 		ArrayList<Subscriber> listSubscribers = new ArrayList<Subscriber>();
@@ -254,6 +264,7 @@ public class BettingSoft {
 		return listSubscribers;
 
 	}
+	
 	public long unsubscribe(String managerPwd, String username)throws BadParametersException, 
 																	  ExistingSubscriberException, 
 																	  AuthenticationException {
@@ -268,25 +279,36 @@ public class BettingSoft {
 		return remainingTokens;
 				}
 	
-		public String susbscribe(String lastname, String firstname, String username, MyCalendar birthday, String managerPwd) throws BadParametersException, ExistingSubscriberException, AuthenticationException{
-			this.authenticateMngr(managerPwd);
-			Subscriber subscriber=Subscriber.getSubscriberByUsername(username);
-			if(subscriber!=null){
-				throw new ExistingSubscriberException("Username "+username+" already used");
-			}
-			subscriber = new Subscriber(username, lastname, firstname, birthday);
-			
-			return subscriber.getPassword();
+	public String susbscribe(String lastname, 
+							 String firstname, 
+							 String username, MyCalendar birthday, 
+							 String managerPwd) throws BadParametersException, 
+													   ExistingSubscriberException, 
+													   AuthenticationException {
+		this.authenticateMngr(managerPwd);
+		Subscriber subscriber=Subscriber.getSubscriberByUsername(username);
+		if(subscriber!=null){
+			throw new ExistingSubscriberException("Username "+username+" already used");
 		}
-		public void creditSubscriber(String username, long numberTokens, String managerPwd) throws BadParametersException, AuthenticationException, ExistingSubscriberException{
-			this.authenticateMngr(managerPwd);
-			SubscriberDAO dao = new SubscriberDAO();
-			Subscriber subscriber = Subscriber.getSubscriberByUsername(username);
-			if(subscriber==null){
-				throw new ExistingSubscriberException("Subscriber doesn't exist");
-			}
-			if (numberTokens < 0)
-				throw new BadParametersException("The number of tokens must be positive value (given : " + numberTokens + ")");
+		subscriber = new Subscriber(username, lastname, firstname, birthday);
+		
+		return subscriber.getPassword();
+		}
+	
+	public void creditSubscriber(String username, 
+								 long numberTokens, 
+								 String managerPwd) throws BadParametersException, 
+														   AuthenticationException, 
+														   ExistingSubscriberException {
+		this.authenticateMngr(managerPwd);
+		SubscriberDAO dao = new SubscriberDAO();
+		Subscriber subscriber = Subscriber.getSubscriberByUsername(username);
+		if(subscriber==null){
+			throw new ExistingSubscriberException("Subscriber doesn't exist");
+		}
+		if (numberTokens < 0){
+			throw new BadParametersException("The number of tokens must be positive value (given : " + numberTokens + ")");
+		}
 		// Credit the subscriber
 		long existingTokens=subscriber.getTokens();
 		subscriber.setTokens(existingTokens+ numberTokens);
@@ -297,58 +319,82 @@ public class BettingSoft {
 				exception.printStackTrace();
 			}
 		}
-		public void debitSubscriber(String username, long numberTokens, String managerPwd) throws AuthenticationException, BadParametersException, ExistingSubscriberException{
-			authenticateMngr(managerPwd);
-			SubscriberDAO dao = new SubscriberDAO();
-			Subscriber subscriber=Subscriber.getSubscriberByUsername(username);
-			if(subscriber==null){
-				throw new ExistingSubscriberException("Subscriber doesn't exist");
-			}
-			if (numberTokens < 0)
-				throw new BadParametersException("The number of tokens must be positive value (given : " + numberTokens + ")");
-		// Credit the subscriber
+	
+	public void debitSubscriber(String username, 
+			                    long numberTokens, 
+			                    String managerPwd) throws AuthenticationException, 
+														  BadParametersException, 
+														  ExistingSubscriberException {
+		authenticateMngr(managerPwd);
+		SubscriberDAO dao = new SubscriberDAO();
+		Subscriber subscriber=Subscriber.getSubscriberByUsername(username);
+		if(subscriber==null){
+			throw new ExistingSubscriberException("Subscriber doesn't exist");
+		}
+		if (numberTokens < 0){
+			throw new BadParametersException("The number of tokens must be positive value (given : " + numberTokens + ")");
+		}
+			// Credit the subscriber
 		long existingTokens=subscriber.getTokens();
 		subscriber.setTokens(existingTokens - numberTokens);
 		// Update to the database
-			try {
-				dao.update(subscriber);
-			} catch (SQLException exception) {
-				exception.printStackTrace();
-			}
+		try {
+			dao.update(subscriber);
+		} catch (SQLException exception) {
+			exception.printStackTrace();
+		}
 		}
 		
-		public static void changeSubsPwd(String username, String newPwd, String currentPwd) throws BadParametersException, AuthenticationException{
-			SubscriberDAO dao = new SubscriberDAO();
-			Subscriber subscriber=Subscriber.getSubscriberByUsername(username);
-			Subscriber.authenticateSubscriber(username,currentPwd);
-			subscriber.setPassword(newPwd);
-			try {
-				dao.update(subscriber);
-			} catch (SQLException exception) {
-				exception.printStackTrace();
-			}		
-		}
-		public static void deleteBetsCompetition(String competition, String username,
-				String pwdSubs) throws AuthenticationException,
-				CompetitionException, ExistingCompetitionException, SQLException, ExistingCompetitorException, ExistingCompetitionException, NotATeamException, BadParametersException, BadParametersException {
-			// Look if a subscriber with this username exists
-			Subscriber sub = Subscriber.getSubscriberByUsername(username);
-			if (sub == null)
-				throw new AuthenticationException("Subscriber with username " + username + " does not exist");
-			// Look if a competition with this name exists
-			Competition comp = BettingSoft.getCompetitionByName(competition);
-			if (comp == null)
-				throw new ExistingCompetitionException("Competition with name " + competition + " does not exist");
-			// Delete the bets
-			try {
-				BetDAO.delete(comp,sub);
-			} catch (SQLException exception) {
-				exception.printStackTrace();
-			}
+	public static void changeSubsPwd(String username, 
+									 String newPwd, 
+									 String currentPwd) throws BadParametersException, 
+															   AuthenticationException {
+		SubscriberDAO dao = new SubscriberDAO();
+		Subscriber subscriber=Subscriber.getSubscriberByUsername(username);
+		Subscriber.authenticateSubscriber(username,currentPwd);
+		subscriber.setPassword(newPwd);
+		try {
+			dao.update(subscriber);
+		} catch (SQLException exception) {
+			exception.printStackTrace();
+		}		
 	}
+	public static void deleteBetsCompetition(String competition, 
+											 String username,
+											 String pwdSubs) throws AuthenticationException,
+																	CompetitionException, 
+																	ExistingCompetitionException, 
+																	SQLException, 
+																	ExistingCompetitorException, 
+																	ExistingCompetitionException, 
+																	NotATeamException, 
+																	BadParametersException, 
+																	BadParametersException {
+		// Look if a subscriber with this username exists
+		Subscriber sub = Subscriber.getSubscriberByUsername(username);
+		if (sub == null){
+			throw new AuthenticationException("Subscriber with username " + username + " does not exist");
+		}
+			// Look if a competition with this name exists
+		Competition comp = BettingSoft.getCompetitionByName(competition);
+		if (comp == null){
+			throw new ExistingCompetitionException("Competition with name " + competition + " does not exist");
+		}
+		// Delete the bets
+		try {
+			BetDAO.delete(comp,sub);
+		} catch (SQLException exception) {
+			exception.printStackTrace();
+		}
+}
 		
-	public static ArrayList<Bet> consultBetsCompetitionB(String competition)
-			throws ExistingCompetitionException, SQLException, BadParametersException, ExistingCompetitorException, ExistingCompetitionException, NotATeamException {
+	public static ArrayList<Bet> consultBetsCompetitionB(
+			String competition) throws ExistingCompetitionException, 
+									   SQLException, 
+									   BadParametersException, 
+									   ExistingCompetitorException, 
+									   ExistingCompetitionException, 
+									   NotATeamException {
 		// look if the name given match a competition in the db
 		Competition competition_object = BettingSoft.getCompetitionByName(competition);
 		if (competition_object == null) {
@@ -359,12 +405,17 @@ public class BettingSoft {
 	}
 	
 
-	public static ArrayList<String> consultBetsCompetition(String competition)
-			throws ExistingCompetitionException, SQLException, BadParametersException, ExistingCompetitorException, NotATeamException {
+	public static ArrayList<String> consultBetsCompetition(
+			String competition)throws ExistingCompetitionException, 
+									  SQLException, 
+									  BadParametersException, 
+									  ExistingCompetitorException, 
+									  NotATeamException {
 		// look if the name given match a competition in the db
 		Competition competition_object = getCompetitionByName(competition);// another betting soft method
-		if (competition_object == null)
+		if (competition_object == null) {
 			throw new ExistingCompetitionException("Competition with name " + competition + " does not exist");
+		}
 		// Consult the bets
 		  ArrayList<Bet> bets = BetDAO.consult(competition_object);
 		  ArrayList<String> consultbets =new ArrayList<String>();
@@ -375,9 +426,22 @@ public class BettingSoft {
 		  return consultbets;
 	}
 	
-	public void betOnPodium(long tokens, String competitionName,
-			Competitor winner, Competitor second, Competitor third,
-			String username, String pwdSubs) throws ExistingSubscriberException, CompetitionException, SubscriberException, BadParametersException, AuthenticationException, SQLException, NotATeamException, ExistingCompetitorException, ExistingCompetitionException, BadParametersException{
+	public void betOnPodium(long tokens, 
+							String competitionName,
+							Competitor winner, 
+							Competitor second, 
+							Competitor third,
+							String username, 
+							String pwdSubs) throws ExistingSubscriberException, 
+												   CompetitionException, 
+												   SubscriberException, 
+												   BadParametersException, 
+												   AuthenticationException, 
+												   SQLException, 
+												   NotATeamException, 
+												   ExistingCompetitorException, 
+												   ExistingCompetitionException, 
+												   BadParametersException {
 			
 		Subscriber subs = Subscriber.getSubscriberByUsername(username);
 		Competition comp = BettingSoft.getCompetitionByName(competitionName);

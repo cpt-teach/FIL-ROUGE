@@ -47,7 +47,6 @@ public class Subscriber implements Serializable {
 	/** 
 	 * @uml.property name="username"
 	 */
-	private ArrayList<Bet> subscriberBets;
 	private String username;
 	private String password;
 	private MyCalendar birthday;
