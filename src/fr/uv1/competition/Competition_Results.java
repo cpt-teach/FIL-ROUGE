@@ -15,7 +15,7 @@ public class Competition_Results {
 		this.setCompetition(Competition_Id);
 		}
 		
-		//Definirtion des setteurs
+		//Definition des setteurs
 	public void setFirst(Participation first){
 	this.podium1 = first;
 	} 
@@ -31,7 +31,7 @@ public class Competition_Results {
 	public void setCompetition(int Competition_Id){
 	this.Competition_Id = Competition_Id;
 	} 
-		//Définirtion des getteurs
+		//Definition des getteurs
 		
 	public Participation getFirst(){
 	return this.podium1;
@@ -49,7 +49,7 @@ public class Competition_Results {
 	return this.Competition_Id;
 	}
 	
-		//Autres méthodes
+		//Autres methods
 		
 	public int IsPodium(Participation id){ // return the rank of the participatioon in the podium or -1 if not in podium
 	if(id.getParticipationId()==podium1.getParticipationId())  //getId est une méthode de la classe Participation

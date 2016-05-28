@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import fr.uv1.utils.MyCalendar;
 import fr.uv1.bettingServices.Exceptions.*;
-import fr.uv1.bettingServices.*;
 
 
 public class Competition {

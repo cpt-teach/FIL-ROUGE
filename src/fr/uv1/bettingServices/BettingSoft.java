@@ -1,9 +1,6 @@
 package fr.uv1.bettingServices;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
+
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import fr.uv1.competition.*;
 
@@ -16,12 +13,8 @@ import fr.uv1.utils.MyCalendar;
 public class BettingSoft {
 
 	private String managerPassword;
-	private ArrayList<Subscriber> subscribers;
-	private ArrayList<Competition> competitions;
-	private Competition comp;
-	private ArrayList<Bet> bets;
 	private ArrayList<Competitor> competitors;
-	private Subscriber subs;
+
   
 // -- LOT 3--
 	
@@ -65,7 +58,7 @@ public class BettingSoft {
 					long total = 0 ;	    
 					int totalwinner = 0;
 					// Getting the list of bettors on the competition
-					List<Bet> listBets = consultBetsCompetition(competition); 
+					List<Bet> listBets = consultBetsCompetitionB(competition); 
 					List<Bet> winningBets = new ArrayList<Bet>();
 					List<Bet> losingBets = new ArrayList<Bet>();
 	
@@ -139,7 +132,7 @@ public class BettingSoft {
 					long total = 0 ;	    
 					int totalwinner = 0;
 					// Getting the list of bettors on the competition
-					List<Bet> listBets = consultBetsCompetition(competition);
+					List<Bet> listBets = consultBetsCompetitionB(competition);
 					List<Bet> winningBets = new ArrayList<Bet>();
 					List<Bet> losingBets = new ArrayList<Bet>();
 
@@ -242,6 +235,7 @@ public class BettingSoft {
 			return competition;
 }
 
+		
 // -- LOT 2--	
 		
 		
@@ -351,15 +345,31 @@ public class BettingSoft {
 			}
 	}
 		
-	public static ArrayList<Bet> consultBetsCompetition(String competition)
+	public static ArrayList<Bet> consultBetsCompetitionB(String competition)
 			throws ExistingCompetitionException, SQLException, BadParametersException, ExistingCompetitorException, ExistingCompetitionException, NotATeamException {
 		// look if the name given match a competition in the db
 		Competition competition_object = BettingSoft.getCompetitionByName(competition);
-		if (competition == null) {
+		if (competition_object == null) {
 			throw new ExistingCompetitionException("Competition with name " + competition + " does not exist");}
 		// Consult the bets
 		  ArrayList<Bet> bets = BetDAO.consult(competition_object);
 		   return bets;
+	}
+	
+	public static ArrayList<String> consultBetsCompetition(String competition)
+			throws ExistingCompetitionException, SQLException, BadParametersException, ExistingCompetitorException, NotATeamException {
+		// look if the name given match a competition in the db
+		Competition competition_object = getCompetitionByName(competition);// another betting soft method
+		if (competition_object == null)
+			throw new ExistingCompetitionException("Competition with name " + competition + " does not exist");
+		// Consult the bets
+		  ArrayList<Bet> bets = BetDAO.consult(competition_object);
+		  ArrayList<String> consultbets =new ArrayList<String>();
+		  for (Bet b: bets){
+			  String Pathkaml="bet_Id"+b.getId()+"in this competition"+competition+",the competitors"+b.getfirst()+","+b.getsecond()+","
+		  +b.getthird()+"made by the Subscriber"+b.toString();
+			  consultbets.add(Pathkaml);}
+		  return consultbets;
 	}
 	
 	public void betOnPodium(long tokens, String competitionName,

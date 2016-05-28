@@ -16,7 +16,29 @@ public class Competition_ResultsDAO {
 	public Competition_ResultsDAO (){
 		
 	}
-
+	
+	public void persist(Competition_Results CompetitionResults) throws SQLException {
+		String request;
+		request = "insert into competition_results(id_comp,podium1,podium2,podium3)  values (" +
+				 +CompetitionResults.getCompetition()+
+				"," +CompetitionResults.getFirst().getParticipationId()+
+				"," +CompetitionResults.getSecond().getParticipationId()+
+				"," +CompetitionResults.getThird().getParticipationId()+");";
+		editBD.edit(user,password,url, request );}
+	
+	
+	public static void update(Competition_Results CompetitionResults) throws SQLException { 
+	    // Get a database connection.yobvh
+	    // Update the competition.
+		String request;
+		request = "update competition_results set (id_comp,podium1,podium2,podium3)  values (" +
+				+CompetitionResults.getCompetition()+
+				"," +CompetitionResults.getFirst().getParticipationId()+
+				"," +CompetitionResults.getSecond().getParticipationId()+
+				"," +CompetitionResults.getThird().getParticipationId()+");";
+		editBD.edit(user,password,url, request );}
+	
+	
 	public int[] ResultCompetition(Competition competition) throws SQLException {
 	    String request = "SELECT * FROM competition_results WHERE id_comp = "+ competition.getId() +";";
 	    ResultSet result = selectBD.select(user,password,url,request );

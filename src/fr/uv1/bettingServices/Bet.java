@@ -1,13 +1,10 @@
 package fr.uv1.bettingServices;
 
-import fr.uv1.bettingServices.BettingSoft.*;
-import java.sql.SQLException;
-import java.util.ArrayList;
 
+import java.sql.SQLException;
 import fr.uv1.competition.*;
 import fr.uv1.bettingServices.Subscriber;
-import fr.uv1.bettingServices.BetDAO;
-import fr.uv1.bettingServices.Exceptions.*;
+
 
 
 
@@ -93,7 +90,19 @@ import fr.uv1.bettingServices.Exceptions.*;
 					this.third.getId()==(thirdId));
 		}
 
-
+        public void toString (Bet bet){ //à voir son utilité!!
+        	if (bet.getifPodium()==1){
+        	System.out.print("this bet is made by"+bet.getBettor().getFirstName()
+        			+""+bet.getBettor().getLastName()+"on the podium:/n"+"winner:"+bet.getfirst().toString()+"/n"+
+        			bet.getsecond().toString()+"/n"+"third:"+bet.getthird().toString()+"/n"
+        			+"on the competition"+bet.getCompetition().toString()+"betting"+bet.getBettorBet());
+        		}
+        	else {
+        		System.out.print("this bet is made by"+bet.getBettor().getFirstName()
+            			+""+bet.getBettor().getLastName()+"on the winner:/n"+"winner:"+bet.getfirst().toString()+"/n"+
+            			"on the competition"+bet.getCompetition().toString()+"betting"+bet.getBettorBet());
+        	}
+        }
 	
 }
 
