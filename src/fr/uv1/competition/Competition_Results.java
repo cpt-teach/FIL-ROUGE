@@ -49,16 +49,18 @@ public class Competition_Results {
 		return this.Competition_Id;
 	}
 	
-		//Autres methods
+// Other methods
+	// return the rank of the participation in the podium or -1 if not in podium
 		
-	public int IsPodium(Participation id){ // return the rank of the participatioon in the podium or -1 if not in podium
-	if(id.getParticipationId()==podium1.getParticipationId())  
-		return 1;
-	else if(id.getParticipationId()==podium2.getParticipationId()) 
-		return 2;
-	else if(id.getParticipationId()==podium3.getParticipationId())  
-		return 3;
-	else
-		return -1;
-	}
+	public int rankInPodium(Participation participation){ 
+		
+		if(participation.getParticipationId() == podium1.getParticipationId())  
+			return 1;
+		else if(participation.getParticipationId()== podium2.getParticipationId()) 
+			return 2;
+		else if(participation.getParticipationId()==podium3.getParticipationId())  
+			return 3;
+		else
+			return -1;
+		}
 }
