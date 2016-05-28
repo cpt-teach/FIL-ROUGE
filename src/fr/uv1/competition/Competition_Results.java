@@ -1,5 +1,6 @@
 package fr.uv1.competition;
 import fr.uv1.bettingServices.*;
+import fr.uv1.bettingServices.Exceptions.*;
 
 public class Competition_Results {
 	
@@ -8,7 +9,18 @@ public class Competition_Results {
 	private Participation podium3;
 	private int Competition_Id;
 	
-	public Competition_Results(Participation podium1, Participation podium2, Participation podium3, int Competition_Id){
+	public Competition_Results(Participation podium1, 
+							   Participation podium2, 
+							   Participation podium3, 
+							   int Competition_Id) throws BadParametersException {
+		if (podium1 == null || podium2 == null || podium3 == null) {
+			throw new BadParametersException("The Results can't be null");
+		}
+		if (podium1.getParticipationId() == podium2.getParticipationId() ||
+			podium1.getParticipationId() == podium3.getParticipationId() ||
+			podium2.getParticipationId() == podium3.getParticipationId()) {
+			throw new BadParametersException("The Podium can't be filled with the same");
+		}
 		this.setFirst(podium1);
 		this.setSecond(podium2);
 		this.setThird(podium3);
@@ -52,7 +64,10 @@ public class Competition_Results {
 // Other methods
 	// return the rank of the participation in the podium or -1 if not in podium
 		
-	public int rankInPodium(Participation participation){ 
+	public int rankInPodium(Participation participation) throws BadParametersException { 
+		if (participation == null) {
+			throw new BadParametersException(" Give a participation first ");
+		}
 		
 		if(participation.getParticipationId() == podium1.getParticipationId())  
 			return 1;

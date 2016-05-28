@@ -15,10 +15,20 @@ public class BettingSoft {
 	private String managerPassword;
 	private ArrayList<Competitor> competitors;
 
+	public BettingSoft(String managerPassword) {
+		this.managerPassword = managerPassword;
+		this.competitors = new ArrayList<Competitor>();
+	}
   
 // -- LOT 3------------------------------------------------------
-	
-	
+		public void setmanagerPassword(String managerPassword){
+			this.managerPassword = managerPassword;
+		} 
+			
+		public String getmanagerPassword(){
+			return this.managerPassword;
+		}
+		
 		public void authenticateMngr(String managerPassword) throws AuthenticationException {
 	
 			if (managerPassword == null)
@@ -36,7 +46,8 @@ public class BettingSoft {
 														   SQLException,
 														   NotATeamException,
 														   ExistingCompetitorException,
-														   ExistingSubscriberException   {	
+														   ExistingSubscriberException, 
+														   SubscriberException   {	
 				
 		       // First we authenticate the manager
 				this.authenticateMngr(managerPwd);
@@ -105,7 +116,8 @@ public class BettingSoft {
 									 			     SQLException,
 									 			     NotATeamException,
 									 			     ExistingCompetitorException,
-									 			     ExistingSubscriberException {	
+									 			     ExistingSubscriberException, 
+									 			     SubscriberException {	
 						
 				
 				 // First we authenticate the manager
@@ -267,7 +279,8 @@ public class BettingSoft {
 	
 	public long unsubscribe(String managerPwd, String username)throws BadParametersException, 
 																	  ExistingSubscriberException, 
-																	  AuthenticationException {
+																	  AuthenticationException, 
+																	  SubscriberException {
 		this.authenticateMngr(managerPwd);
 		Subscriber subscriber=Subscriber.getSubscriberByUsername(username);
 		long remainingTokens= subscriber.getTokens();
@@ -284,7 +297,8 @@ public class BettingSoft {
 							 String username, MyCalendar birthday, 
 							 String managerPwd) throws BadParametersException, 
 													   ExistingSubscriberException, 
-													   AuthenticationException {
+													   AuthenticationException, 
+													   SubscriberException {
 		this.authenticateMngr(managerPwd);
 		Subscriber subscriber=Subscriber.getSubscriberByUsername(username);
 		if(subscriber!=null){
@@ -299,7 +313,8 @@ public class BettingSoft {
 								 long numberTokens, 
 								 String managerPwd) throws BadParametersException, 
 														   AuthenticationException, 
-														   ExistingSubscriberException {
+														   ExistingSubscriberException, 
+														   SubscriberException {
 		this.authenticateMngr(managerPwd);
 		SubscriberDAO dao = new SubscriberDAO();
 		Subscriber subscriber = Subscriber.getSubscriberByUsername(username);
@@ -324,7 +339,8 @@ public class BettingSoft {
 			                    long numberTokens, 
 			                    String managerPwd) throws AuthenticationException, 
 														  BadParametersException, 
-														  ExistingSubscriberException {
+														  ExistingSubscriberException, 
+														  SubscriberException {
 		authenticateMngr(managerPwd);
 		SubscriberDAO dao = new SubscriberDAO();
 		Subscriber subscriber=Subscriber.getSubscriberByUsername(username);
@@ -348,7 +364,8 @@ public class BettingSoft {
 	public static void changeSubsPwd(String username, 
 									 String newPwd, 
 									 String currentPwd) throws BadParametersException, 
-															   AuthenticationException {
+															   AuthenticationException, 
+															   SubscriberException {
 		SubscriberDAO dao = new SubscriberDAO();
 		Subscriber subscriber=Subscriber.getSubscriberByUsername(username);
 		Subscriber.authenticateSubscriber(username,currentPwd);
@@ -369,7 +386,8 @@ public class BettingSoft {
 																	ExistingCompetitionException, 
 																	NotATeamException, 
 																	BadParametersException, 
-																	BadParametersException {
+																	BadParametersException, 
+																	SubscriberException {
 		// Look if a subscriber with this username exists
 		Subscriber sub = Subscriber.getSubscriberByUsername(username);
 		if (sub == null){
