@@ -271,10 +271,6 @@ public class Subscriber implements Serializable {
 	
 	
 	
-	
-	
-	
-	
 	public static void authenticateSubscriber(String username, String password) 
 			throws AuthenticationException, BadParametersException {
 			Subscriber subscriber=getSubscriberByUsername(username);
@@ -286,28 +282,6 @@ public class Subscriber implements Serializable {
 				throw new AuthenticationException("please verify the password");	
 	}
 	
-	
-	
-	
-	
-/*waiting for Competition*/
-	
-	
-	
-	public static void changeSubsPwd(String username, String newPwd,String currentPwd)
-			throws BadParametersException, AuthenticationException {
-		SubscriberDAO dao = new SubscriberDAO();
-		// Authenticate Subscriber
-		authenticateSubscriber(username,currentPwd);
-		// Change password
-		getSubscriberByUsername(username).password = newPwd;
-		// Update to the database
-			try {
-				dao.update(getSubscriberByUsername(username));
-			} catch (SQLException exception) {
-				exception.printStackTrace();
-			}
-	}
 
 	public static Subscriber getSubscriberByUsername(String username)
 			throws BadParametersException {
@@ -329,7 +303,13 @@ public class Subscriber implements Serializable {
 			}
 			return subscriber;
 	}
-	
+	public static void main (String [] arg ) throws BadParametersException, AuthenticationException {
+		Subscriber s = getSubscriberByUsername("caca");
+		BettingSoft.changeSubsPwd("caca","fuckyou", "nTch3jPs");
+		
+		
+		
+	}
 
 	
 	

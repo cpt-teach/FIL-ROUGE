@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import fr.uv1.utils.MyCalendar;
 import fr.uv1.bettingServices.Exceptions.*;
+import fr.uv1.bettingServices.*;
 
 
 public class Competition {
@@ -37,9 +38,6 @@ public class Competition {
 	
 	// DAO interactions
 	
-	public static List<Competition> listCompetitions() throws SQLException {
-		return fr.uv1.competition.CompetitionDAO.listCompetitions();
-	}
 	
 	public  void addToCompetition() throws ExistingCompetitionException, SQLException {
 		CompetitionDAO.persist(this);
@@ -86,45 +84,9 @@ public class Competition {
 	}
 	
 	
-
-	
-	public static Competition getCompetitionByName(String Competition_name)throws SQLException, BadParametersException, ExistingCompetitorException, ExistingCompetitionException, NotATeamException{ // TODO in DAO
-		Competition competition = CompetitionDAO.selectCompetitionByName(Competition_name);
-		return competition;
-	}
-
 	
 	//Main methods of the class
 	
-	
-	/** Adds a competitor to this competition
-	 * 
-	 * @param competitor
-	 * @throws ExistingCompetitorException
-	 */
-	
-	public void addCompetitor(Competitor competitor) throws ExistingCompetitorException {
-		if (competitors.contains(competitor)){ throw new ExistingCompetitorException();	}
-		else { competitors.add(competitor); }
-	}
-	
-	/** Deletes a competitor from this competition
-	 * 
-	 * @param competitor
-	 * @throws ExistingCompetitorException
-	 */
-	public void deleteCompetitor(Competitor competitor) throws ExistingCompetitorException {
-		if (! competitors.contains(competitor)){ throw new ExistingCompetitorException(); }
-		else { competitors.remove(competitor); }
-	}
-	
-	/** Returns the list of competitors in this competition
-	 * 
-	 * @return Returns the list of the competitors of this competition
-	 */
-	public static java.util.Collection<Competitor> listCompetitors(String competition)throws ExistingCompetitorException, ExistingCompetitionException, CompetitionException, NotATeamException, SQLException, BadParametersException { // BS
-		return getCompetitionByName(competition).getCompetitors();
-	}
 	
 	// Returns True if the competition is closed, False if it's still running
 	public boolean isClosed() {

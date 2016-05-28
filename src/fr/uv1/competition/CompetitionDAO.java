@@ -95,7 +95,11 @@ public class CompetitionDAO {
 			return result.getInt(1);
 		}
 		
-		public static Competition selectCompetitionByName(String Competition_name)throws SQLException, BadParametersException, ExistingCompetitorException, ExistingCompetitionException, NotATeamException{ // TODO in DAO
+		public static Competition selectCompetitionByName(String Competition_name)throws SQLException, 
+																						 BadParametersException, 
+																						 ExistingCompetitorException, 
+																						 ExistingCompetitionException, 
+																						 NotATeamException{ // TODO in DAO
 			Competition competition = null;
 			CompetitionDAO dao = new CompetitionDAO();
 			ResultSet result = selectBD.select(dao.user,dao.password,dao.url, "SELECT * FROM competition WHERE name LIKE '"+Competition_name+"';");

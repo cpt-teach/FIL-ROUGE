@@ -19,18 +19,19 @@ public class SubscriberDAO{
 	}
 
 	public void persist(Subscriber subscriber) throws SQLException {
-		String request="insert into Subscriber(username,firstname,lastname,password,birthday,tokens values ("+subscriber.getUserName()+","
-				+subscriber.getFirstName()+", "
-				+subscriber.getLastName()+", "
-				+subscriber.getPassword()+","
-				+subscriber.getBirthday().toString()+", "
-				+subscriber.getTokens()+");";
+		String request="insert into subscriber(username,firstname,lastname,password,birthday,tokens) values ('"+subscriber.getUserName()+"','"
+				+subscriber.getFirstName()+"', '"
+				+subscriber.getLastName()+"', '"
+				+subscriber.getPassword()+"','"
+				+subscriber.getBirthday().toString2()+"','"
+				+subscriber.getTokens()+"');";
+		System.out.println(request);
 		editBD.edit(user,password,url, request);
-			request="select currval('subscriber_id') as value_id";
+			request="select subscriber_id FROM subscriber WHERE username='"+subscriber.getUserName()+"';";
 			ResultSet resultSet=selectBD.select(user,password,url,request);
 			int id  = 0;
 			while(resultSet.next())
-				id = resultSet.getInt("value_id");
+				id = resultSet.getInt("subscriber_id");
 
 			subscriber.setSubscriber_id(id);		
 	}
@@ -79,7 +80,7 @@ public class SubscriberDAO{
 					"lastname="+subscriber.getLastName()+"," +
 							"firstname="+subscriber.getFirstName()+"," +
 									"tokens="+subscriber.getTokens()+"," +
-											"birthdate="+subscriber.getBirthday().toString()+" where subscriber_id="+subscriber.getSubscriber_id()+";";
+											"birthdate="+subscriber.getBirthday().toString2()+" where subscriber_id="+subscriber.getSubscriber_id()+";";
 
 	    	editBD.edit(user,password,url, request);
 	  }
@@ -119,7 +120,7 @@ public class SubscriberDAO{
 	}
 	public static Subscriber getSubscriberByUsername(String username) throws BadParametersException, SQLException{
 	
-		String request="select * from subscriber where subscriber_id="+username+";";
+		String request="select * from subscriber where subscriber_id='"+username+"';";
 		ResultSet resultSet=selectBD.select(user,password,url,request);
 		Subscriber subscriber=null;
 		while(resultSet.next()) {
