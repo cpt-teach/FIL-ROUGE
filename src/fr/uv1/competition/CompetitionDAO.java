@@ -116,7 +116,7 @@ public class CompetitionDAO {
 							while(result4.next()){	
 								
 								
-								Competitor competitor_team = new Team(result2.getString(2));
+								Competitor competitor_team = new Team(result2.getString(2),result2.getString(3));
 								ResultSet result3 = selectBD.select(dao.user,dao.password,dao.url, "SELECT * FROM individual WHERE indi_id = "+result4.getInt(1)+";");
 								while(result3.next()){
 									Competitor member = new Individual(result3.getString(2),result3.getString(3),result3.getString(4));

@@ -11,4 +11,5 @@ public interface Competitor {
 	public boolean hasValidName();
 	public boolean isTeam();
 	public int getId() throws SQLException;
+	public String getName();
 }

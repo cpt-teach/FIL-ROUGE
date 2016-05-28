@@ -90,17 +90,17 @@ import fr.uv1.bettingServices.Subscriber;
 					this.third.getId()==(thirdId));
 		}
 
-        public void toString (Bet bet){ //à voir son utilité!!
+        public void toString (Bet bet){ 
         	if (bet.getifPodium()==1){
         	System.out.print("this bet is made by"+bet.getBettor().getFirstName()
-        			+""+bet.getBettor().getLastName()+"on the podium:/n"+"winner:"+bet.getfirst().toString()+"/n"+
-        			bet.getsecond().toString()+"/n"+"third:"+bet.getthird().toString()+"/n"
-        			+"on the competition"+bet.getCompetition().toString()+"betting"+bet.getBettorBet());
+        			+""+bet.getBettor().getLastName()+"on the podium:/n"+"winner:"+bet.getfirst().getName()+"/n"+
+        			bet.getsecond().getName()+"/n"+"third:"+bet.getthird().getName()+"/n"
+        			+"on the competition"+bet.getCompetition().getName()+"betting"+bet.getBettorBet());
         		}
         	else {
         		System.out.print("this bet is made by"+bet.getBettor().getFirstName()
-            			+""+bet.getBettor().getLastName()+"on the winner:/n"+"winner:"+bet.getfirst().toString()+"/n"+
-            			"on the competition"+bet.getCompetition().toString()+"betting"+bet.getBettorBet());
+            			+""+bet.getBettor().getLastName()+"on the winner:/n"+"winner:"+bet.getfirst().getName()+"/n"+
+            			"on the competition"+bet.getCompetition().getName()+"betting"+bet.getBettorBet());
         	}
         }
 	
