@@ -205,7 +205,7 @@ public class BettingSoftTest {
 		Participation Secondp = new Participation(2,Second.getId(),competition.getId(),false);
 		Competitor Third = new Team("3","");
 		Participation Thirdp = new Participation(3,Third.getId(),competition.getId(),false);
-		Competitor Loser = new Team("4","");
+		//Competitor Loser = new Team("4","");
 		//Participation Loserp = new Participation(2,Loser.getId(),competition.getId(),false);
 		Competition_Results compRes = new Competition_Results(Winnerp,Secondp,Thirdp,competition.getId());
 		Competition_ResultsDAO.persist(compRes);
