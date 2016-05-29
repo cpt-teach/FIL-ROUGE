@@ -2,10 +2,10 @@ package fr.uv1.bettingServices;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
+import fr.uv1.competition.*;
 import fr.uv1.bd.editBD;
 import fr.uv1.bd.selectBD;
-import fr.uv1.bettingServices.Exceptions.BadParametersException;
+import fr.uv1.bettingServices.Exceptions.*;
 import fr.uv1.utils.MyCalendar;
 
 public class SubscriberDAO{
@@ -137,6 +137,34 @@ public class SubscriberDAO{
 	    return subscriber;
 	    
 	}
+	
+	public static ArrayList<Bet> subscriberBets(Subscriber subscriber) throws SQLException, BadParametersException, ExistingCompetitorException, ExistingCompetitionException {
+		String request="select * from bets where bettor_Id="+subscriber.getSubscriber_id()+";";
+		ResultSet resultSet=selectBD.select(user, password, url, request);
+		ArrayList<Bet> subscriberBets = new ArrayList<Bet>();
+		Competition_ResultsDAO comp_res_dao=new Competition_ResultsDAO();
+		while(resultSet.next()){
+			Bet bet=null;
+			if(resultSet.getInt("ifPodium")==1){
+				bet=new Bet(resultSet.getLong("montant"),comp_res_dao.getCompetitorById(resultSet.getInt("winner_Id")),
+						comp_res_dao.getCompetitorById(resultSet.getInt("second_Id")),
+						comp_res_dao.getCompetitorById(resultSet.getInt("third_Id")),CompetitionDAO.selectCompetitionById(resultSet.getInt("competition_ID")),
+						getSubscriberById(resultSet.getInt("bettor_Id")),1);
+				subscriberBets.add(bet);
+			}
+			if(resultSet.getInt("ifPodium")==0){
+				bet=new Bet(resultSet.getLong("montant"),comp_res_dao.getCompetitorById(resultSet.getInt("winner_Id")),
+						comp_res_dao.getCompetitorById(resultSet.getInt("winner_Id")),
+						comp_res_dao.getCompetitorById(resultSet.getInt("winner_Id")),CompetitionDAO.selectCompetitionById(resultSet.getInt("competition_ID")),
+						getSubscriberById(resultSet.getInt("bettor_Id")),0);
+				subscriberBets.add(bet);
+			}
+			}
+		return subscriberBets;
+			
+			
+		}
+	
 	}
 	
 

@@ -14,200 +14,210 @@ public class BettingSoft {
 
 	private String managerPassword;
 	private ArrayList<Competitor> competitors;
-
+	
+	public BettingSoft(String managerPassword){
+		setmanagerPassword(managerPassword);
+		competitors = new ArrayList<Competitor>();
+	}
   
 // -- LOT 3------------------------------------------------------
-	
-	
-		public void authenticateMngr(String managerPassword) throws AuthenticationException {
-	
-			if (managerPassword == null)
-				throw new AuthenticationException("Enter a manager password");
-			if (!this.managerPassword.equals(managerPassword))
-				throw new AuthenticationException("Incorrect password ");		
-		}
+	public void setmanagerPassword(String managerPassword){
+		this.managerPassword = managerPassword;
+	} 
 		
-		public void settleWinner(String competition, 
-								 Competitor winner, 
-								 String managerPwd) throws AuthenticationException,
-														   ExistingCompetitionException,
-														   CompetitionException,
-														   BadParametersException,
-														   SQLException,
-														   NotATeamException,
-														   ExistingCompetitorException,
-														   ExistingSubscriberException   {	
-				
-		       // First we authenticate the manager
-				this.authenticateMngr(managerPwd);
-				
-				//Check if all the parameters are valid
-				// - competition
-				Competition competition_object = getCompetitionByName(competition);
-				if(competition_object == null)
-					throw new ExistingCompetitionException("The competition named does not exist");
-				// - winner
-				
-				 if(!competition_object.checkCompetitor(winner))
-				 	throw new CompetitionException("Winner doesn't compete in the named competition ");
-		          		 
-				//If the competition is closed we credit all the winning bettors.
-				if(!competition_object.isClosed()) {
-					throw new CompetitionException("Competition still running");}
-				else {
-					long total = 0 ;	    
-					int totalwinner = 0;
-					// Getting the list of bettors on the competition
-					List<Bet> listBets = consultBetsCompetitionB(competition); 
-					List<Bet> winningBets = new ArrayList<Bet>();
-					List<Bet> losingBets = new ArrayList<Bet>();
+	public String getmanagerPassword(){
+		return this.managerPassword;
+	}
 	
-					for(int i=0; i<listBets.size(); i++) {
-						total = total + listBets.get(i).getBettorBet();
-						if (listBets.get(i).getfirst().getId() == (winner.getId())) {
-							totalwinner = totalwinner + (int)listBets.get(i).getBettorBet();
-							winningBets.add(listBets.get(i));
-						}	
-						else {
-							losingBets.add(listBets.get(i));
-						}
-					}
-					if(totalwinner !=0){
-					//Debit the losers
-						for(int i=0; i<losingBets.size(); i++) {
-							
-							debitSubscriber(losingBets.get(i).getBettor().getUserName(), 
-													   losingBets.get(i).getBettorBet(), 
-													    managerPwd); 
-						}
-					// Credit the winners 
-						for(int i=0; i<winningBets.size(); i++) {
-							
-							creditSubscriber(winningBets.get(i).getBettor().getUserName(), 
-													   (winningBets.get(i).getBettorBet()*total)/totalwinner, 
-													    managerPwd); 
-						}
-					}
-					deleteCompetition(competition, managerPwd);
+	public void authenticateMngr(String managerPassword) throws AuthenticationException {
+
+		if (managerPassword == null)
+			throw new AuthenticationException("Enter a manager password");
+		if (!this.managerPassword.equals(managerPassword))
+			throw new AuthenticationException("Incorrect password ");		
+	}
 	
-				}	
-		}
-		
-
-		public void settlePodium(String competition, 
-								 Competitor winner, 
-								 Competitor second, 
-								 Competitor third, 
-								 String managerPwd)	 throws AuthenticationException,
-													 ExistingCompetitionException,
-													 CompetitionException,
-									 			     BadParametersException,
-									 			     SQLException,
-									 			     NotATeamException,
-									 			     ExistingCompetitorException,
-									 			     ExistingSubscriberException {	
-						
-				
-				 // First we authenticate the manager
-				this.authenticateMngr(managerPwd);
-				
-				//Check if all the parameters are valid
-				// - competition
-				Competition competition_object = getCompetitionByName(competition);
-				if(competition_object == null)
-					throw new ExistingCompetitionException("The competition named does not exist");
-				// - winner second third
-				
-				 if(!competition_object.checkCompetitor(winner))
-				 		throw new CompetitionException("First doesn't compete in the named competition ");
-				 if(!competition_object.checkCompetitor(winner))
-					 	throw new CompetitionException("Second doesn't compete in the named competition ");
-				 if(!competition_object.checkCompetitor(winner))
-					 	throw new CompetitionException("Third doesn't compete in the named competition ");
-		          		 
-				//If the competition is closed we credit all the winning bettors.
-				if(!competition_object.isClosed()) {
-					throw new CompetitionException("Competition still running");}
-				else {
-					long total = 0 ;	    
-					int totalwinner = 0;
-					// Getting the list of bettors on the competition
-					List<Bet> listBets = consultBetsCompetitionB(competition);
-					List<Bet> winningBets = new ArrayList<Bet>();
-					List<Bet> losingBets = new ArrayList<Bet>();
-
-					for(int i=0; i<listBets.size(); i++) {
-						total = total + listBets.get(i).getBettorBet();
-						if (listBets.get(i).getfirst().getId() == (winner.getId()) &&
-							listBets.get(i).getsecond().getId() == (second.getId()) &&
-							listBets.get(i).getthird().getId() == (third.getId())) {
-							totalwinner = totalwinner + (int)listBets.get(i).getBettorBet();
-							winningBets.add(listBets.get(i));
-						}	
-						else {
-							losingBets.add(listBets.get(i));
-						}
-					}
-					if(totalwinner !=0){
-					//Debit the losers
-						for(int i=0; i<losingBets.size(); i++) {
-							
-							debitSubscriber(losingBets.get(i).getBettor().getUserName(), 
-													   losingBets.get(i).getBettorBet(), 
-													    managerPwd); // BS
-						}
-					// Credit the winners 
-						for(int i=0; i<winningBets.size(); i++) {
-							
-							creditSubscriber(winningBets.get(i).getBettor().getUserName(), 
-													   (winningBets.get(i).getBettorBet()*total)/totalwinner, 
-													    managerPwd); // BS
-						}
-					}
-					deleteCompetition(competition, managerPwd);
-
-				}
-		}
-		
-
-		
-
-		public static ArrayList<Competitor> consultResultsCompetition(
-				String competition) throws AuthenticationException,
-										   ExistingCompetitionException,
-										   CompetitionException,
-										   BadParametersException,
-										   SQLException,
-										   NotATeamException,
-										   ExistingCompetitorException {
-			Competition_ResultsDAO dao = new Competition_ResultsDAO();
+	public void settleWinner(String competition, 
+							 Competitor winner, 
+							 String managerPwd) throws AuthenticationException,
+													   ExistingCompetitionException,
+													   CompetitionException,
+													   BadParametersException,
+													   SQLException,
+													   NotATeamException,
+													   ExistingCompetitorException,
+													   ExistingSubscriberException   {	
+			
+	       // First we authenticate the manager
+			this.authenticateMngr(managerPwd);
+			
 			//Check if all the parameters are valid
-			//competition
+			// - competition
 			Competition competition_object = getCompetitionByName(competition);
-			if(competition_object == null) {
-				throw new ExistingCompetitionException("The competition named does not exist"); }
-			int[] PodiumId = dao.ResultCompetition(competition_object);
-			int[] PodiumIdC = dao.ParticipationToCompetitor(PodiumId);
-			ArrayList<Competitor> list = new ArrayList<Competitor>();
-			list.add(dao.getCompetitorById(PodiumIdC[0]));
-			list.add(dao.getCompetitorById(PodiumIdC[1]));
-			list.add(dao.getCompetitorById(PodiumIdC[2]));
+			if(competition_object == null)
+				throw new ExistingCompetitionException("The competition named does not exist");
+			// - winner
 			
-			return list;
+			 if(!competition_object.checkCompetitor(winner))
+			 	throw new CompetitionException("Winner doesn't compete in the named competition ");
+	          		 
+			//If the competition is closed we credit all the winning bettors.
+			if(!competition_object.isClosed()) {
+				throw new CompetitionException("Competition still running");}
+			else {
+				long total = 0 ;	    
+				int totalwinner = 0;
+				// Getting the list of bettors on the competition
+				List<Bet> listBets = consultBetsCompetitionB(competition); 
+				List<Bet> winningBets = new ArrayList<Bet>();
+				List<Bet> losingBets = new ArrayList<Bet>();
+
+				for(int i=0; i<listBets.size(); i++) {
+					total = total + listBets.get(i).getBettorBet();
+					if (listBets.get(i).getfirst().getId() == (winner.getId())) {
+						totalwinner = totalwinner + (int)listBets.get(i).getBettorBet();
+						winningBets.add(listBets.get(i));
+					}	
+					else {
+						losingBets.add(listBets.get(i));
+					}
+				}
+				if(totalwinner !=0){
+				//Debit the losers
+					for(int i=0; i<losingBets.size(); i++) {
+						
+						debitSubscriber(losingBets.get(i).getBettor().getUserName(), 
+												   losingBets.get(i).getBettorBet(), 
+												    managerPwd); 
+					}
+				// Credit the winners 
+					for(int i=0; i<winningBets.size(); i++) {
+						
+						creditSubscriber(winningBets.get(i).getBettor().getUserName(), 
+												   (winningBets.get(i).getBettorBet()*total)/totalwinner, 
+												    managerPwd); 
+					}
+				}
+				deleteCompetition(competition, managerPwd);
+
+			}	
+	}
+	
+
+	public void settlePodium(String competition, 
+							 Competitor winner, 
+							 Competitor second, 
+							 Competitor third, 
+							 String managerPwd)	 throws AuthenticationException,
+												 ExistingCompetitionException,
+												 CompetitionException,
+								 			     BadParametersException,
+								 			     SQLException,
+								 			     NotATeamException,
+								 			     ExistingCompetitorException,
+								 			     ExistingSubscriberException {	
+					
+			
+			 // First we authenticate the manager
+			this.authenticateMngr(managerPwd);
+			
+			//Check if all the parameters are valid
+			// - competition
+			Competition competition_object = getCompetitionByName(competition);
+			if(competition_object == null)
+				throw new ExistingCompetitionException("The competition named does not exist");
+			// - winner second third
+			
+			 if(!competition_object.checkCompetitor(winner))
+			 		throw new CompetitionException("First doesn't compete in the named competition ");
+			 if(!competition_object.checkCompetitor(winner))
+				 	throw new CompetitionException("Second doesn't compete in the named competition ");
+			 if(!competition_object.checkCompetitor(winner))
+				 	throw new CompetitionException("Third doesn't compete in the named competition ");
+	          		 
+			//If the competition is closed we credit all the winning bettors.
+			if(!competition_object.isClosed()) {
+				throw new CompetitionException("Competition still running");}
+			else {
+				long total = 0 ;	    
+				int totalwinner = 0;
+				// Getting the list of bettors on the competition
+				List<Bet> listBets = consultBetsCompetitionB(competition);
+				List<Bet> winningBets = new ArrayList<Bet>();
+				List<Bet> losingBets = new ArrayList<Bet>();
+
+				for(int i=0; i<listBets.size(); i++) {
+					total = total + listBets.get(i).getBettorBet();
+					if (listBets.get(i).getfirst().getId() == (winner.getId()) &&
+						listBets.get(i).getsecond().getId() == (second.getId()) &&
+						listBets.get(i).getthird().getId() == (third.getId())) {
+						totalwinner = totalwinner + (int)listBets.get(i).getBettorBet();
+						winningBets.add(listBets.get(i));
+					}	
+					else {
+						losingBets.add(listBets.get(i));
+					}
+				}
+				if(totalwinner !=0){
+				//Debit the losers
+					for(int i=0; i<losingBets.size(); i++) {
+						
+						debitSubscriber(losingBets.get(i).getBettor().getUserName(), 
+												   losingBets.get(i).getBettorBet(), 
+												    managerPwd); // BS
+					}
+				// Credit the winners 
+					for(int i=0; i<winningBets.size(); i++) {
+						
+						creditSubscriber(winningBets.get(i).getBettor().getUserName(), 
+												   (winningBets.get(i).getBettorBet()*total)/totalwinner, 
+												    managerPwd); // BS
+					}
+				}
+				deleteCompetition(competition, managerPwd);
+
 			}
-			
+	}
+	
+
+	
+
+	public static ArrayList<Competitor> consultResultsCompetition(
+			String competition) throws AuthenticationException,
+									   ExistingCompetitionException,
+									   CompetitionException,
+									   BadParametersException,
+									   SQLException,
+									   NotATeamException,
+									   ExistingCompetitorException {
+		Competition_ResultsDAO dao = new Competition_ResultsDAO();
+		//Check if all the parameters are valid
+		//competition
+		Competition competition_object = getCompetitionByName(competition);
+		if(competition_object == null) {
+			throw new ExistingCompetitionException("The competition named does not exist"); }
+		int[] PodiumId = dao.ResultCompetition(competition_object);
+		int[] PodiumIdC = dao.ParticipationToCompetitor(PodiumId);
+		ArrayList<Competitor> list = new ArrayList<Competitor>();
+		list.add(dao.getCompetitorById(PodiumIdC[0]));
+		list.add(dao.getCompetitorById(PodiumIdC[1]));
+		list.add(dao.getCompetitorById(PodiumIdC[2]));
 		
-		public void deleteCompetition(String competition, 
-									  String managerPwd) throws AuthenticationException,
-																SQLException,
-																BadParametersException, 
-																ExistingCompetitorException, 
-																ExistingCompetitionException, 
-																NotATeamException {
-			authenticateMngr(managerPwd);
-			Competition competition_object = getCompetitionByName(competition);
-			if(competition == null) {
-				throw new ExistingCompetitionException("competition does not exist!");
+		return list;
+		}
+		
+	
+	public void deleteCompetition(String competition, 
+								  String managerPwd) throws AuthenticationException,
+															SQLException,
+															BadParametersException, 
+															ExistingCompetitorException, 
+															ExistingCompetitionException, 
+															NotATeamException {
+		authenticateMngr(managerPwd);
+		Competition competition_object = getCompetitionByName(competition);
+		if(competition == null) {
+			throw new ExistingCompetitionException("competition does not exist!");
 			}
 			CompetitionDAO.delete(competition_object);
 		}
@@ -243,8 +253,8 @@ public class BettingSoft {
 			
 			authenticateMngr(managerPwd);
 			Team newCompetitor = new Team(name,"");	
-			return newCompetitor;
-		}
+return newCompetitor;
+}
 		
 // -- LOT 2--------------------------------------------------------
 
@@ -553,6 +563,34 @@ public class BettingSoft {
 		CompetitionDAO.persist(competition_object);
 		
 		}
+	public ArrayList<String> infosSubscriber(String username,String pwdSubs) throws BadParametersException, 
+																					AuthenticationException, 
+																					ExistingCompetitorException, 
+																					ExistingCompetitionException {
+		Subscriber.authenticateSubscriber(username, pwdSubs);
+		Subscriber subscriber=Subscriber.getSubscriberByUsername(username);
+		ArrayList<String> result = new ArrayList<String>();
+		long tokensBetted=0;
+		ArrayList<Bet> bets=new ArrayList<Bet>();
+		result.add("last name : "+subscriber.getLastName());
+		result.add("first name : "+subscriber.getFirstName());
+		result.add("birthday : "+subscriber.getBirthday().toString2());
+		result.add("username : "+subscriber.getUserName());
+		result.add("Tokens : "+Long.toString(subscriber.getTokens()));
+		try {
+			bets=SubscriberDAO.subscriberBets(subscriber);
+		} catch (SQLException exception) {
+			exception.printStackTrace();
+		}
+		
+		
+		for(Bet b : bets){
+			tokensBetted=tokensBetted+b.getBettorBet();
+			result.add(b.toString());	
+		}
+		result.add("Total tokens Betted : "+Long.toString(tokensBetted));
+		return result;
+	}
 	
 	
 	
