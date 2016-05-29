@@ -15,17 +15,17 @@ public class CompetitionDAO {
 	private String url = "jdbc:postgresql://localhost:5433/tests";
 	private String user = "postgres";
 	private String password ="postgres";
+	protected static List<Competition> currentCompetitions = new ArrayList<Competition>();
+		
 	
 	public CompetitionDAO() {
 		
 	}
-	protected static List<Competition> currentCompetitions = new ArrayList<Competition>();
-		
 	// Static methods
 	public static int getIdMax() throws SQLException{
 		CompetitionDAO dao = new CompetitionDAO();
     	ResultSet result=selectBD.select(dao.user,dao.password,dao.url, 
-	    		"SELECT max(id) FROM competition;");
+	    		"SELECT max(comp_id) FROM competition;");
     	result.next();
     	return (result.getInt(1));
      	}
@@ -40,9 +40,9 @@ public class CompetitionDAO {
 	public static void persist(Competition competition) throws SQLException {
 		CompetitionDAO dao = new CompetitionDAO();
 		String request;
-		request = "insert into competition(comp_id,name,sport)  values (" +
-				 +competition.getId()+"," +competition.getName()+
-				"," +competition.getSport()+");";
+		request = "insert into competition(comp_id,name,sport,endDate)  values (" +
+				 +competition.getId()+",'" +competition.getName()+
+				"','" +competition.getSport()+"','"+competition.getendDate().toString2()+"');";
 		editBD.edit(dao.user,dao.password,dao.url, request );}
 	
 	

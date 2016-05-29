@@ -79,7 +79,7 @@ public class Subscriber implements Serializable {
 		this.setUsername(a_username);
 		this.password = password;
 		this.setbirthday(a_birthday);
-		this.tokens=tokens;	
+		this.setTokens(tokens);	
 	}
     public long getTokens(){
     	return tokens;
@@ -138,10 +138,14 @@ public class Subscriber implements Serializable {
 		this.birthday=birthday;
 		
 	}
-	public void setSubscriber_id(int subscriber_id){
+	public void setSubscriber_id(int subscriber_id) throws BadParametersException{
+		if(subscriber_id<=0)
+			throw new BadParametersException("subscriber_id is not valid");
 		this.subscriber_id=subscriber_id;
 	}
-	public void setTokens(long Tokens){
+	public void setTokens(long Tokens) throws BadParametersException{
+		if(Tokens<0) {
+			throw new BadParametersException("enter a positive tokens number");}
 		this.tokens=Tokens;
 	}
 	
@@ -179,11 +183,6 @@ public class Subscriber implements Serializable {
 			return false;
 		Subscriber s = (Subscriber) an_object;
 		return this.username.equals(s.username);
-	}
-
-	@Override
-	public int hashCode() {
-		return this.username.hashCode();
 	}
 
 	@Override
@@ -273,7 +272,7 @@ public class Subscriber implements Serializable {
 	
 	
 	public static void authenticateSubscriber(String username, String password) 
-												throws AuthenticationException, BadParametersException {
+												throws AuthenticationException, BadParametersException, SubscriberException {
 			System.out.println(username);
 			Subscriber subscriber = getSubscriberByUsername(username);
 			String userPassword = subscriber.getPassword();
@@ -286,7 +285,7 @@ public class Subscriber implements Serializable {
 	
 
 	public static Subscriber getSubscriberByUsername(String username)
-			throws BadParametersException {
+			throws BadParametersException, SubscriberException {
 			Subscriber subscriber = null;
 			try {
 				subscriber = SubscriberDAO.getSubscriberByUsername(username);
@@ -295,17 +294,17 @@ public class Subscriber implements Serializable {
 			}
 			return subscriber;
 	}
-	public static Subscriber getSubscriberById(String username)
-			throws BadParametersException{
+	public static Subscriber getSubscriberById(int subscriber_id)
+			throws BadParametersException, SubscriberException{
 			Subscriber subscriber=null;
 			try {
-				subscriber=SubscriberDAO.getSubscriberByUsername(username);
+				subscriber=SubscriberDAO.getSubscriberById(subscriber_id);
 			} catch (SQLException exception) {
 				exception.printStackTrace();
 			}
 			return subscriber;
 	}
-	public static void main (String [] arg ) throws BadParametersException, AuthenticationException {
+/*	 public static void main (String [] arg ) throws BadParametersException, AuthenticationException, SubscriberException {
 		Subscriber saad=new Subscriber("loulou","el mahfoudi","saad",MyCalendar.fromString("1994,04,23"));
 		Subscriber anas=new Subscriber("loulou1","Irhboula","anas",MyCalendar.fromString("1998,03,23"));
 		Subscriber issam=new Subscriber("loulou2","nasser","issam",MyCalendar.fromString("1995,05,23"));
@@ -313,10 +312,10 @@ public class Subscriber implements Serializable {
 		Subscriber s = getSubscriberByUsername("loulou");
 		BettingSoft.changeSubsPwd("loulou1","fuckyouu",anas.getPassword());
 		Subscriber s2 = getSubscriberByUsername("caca");
-		BettingSoft.changeSubsPwd("caca","fuckyou", "nTch3jPs");
-		System.out.println(anas.getFirstName());
+		BettingSoft.changeSubsPwd("caca","fuckyouuu", "nTch3jPs");
+		System.out.println(anas.getFirstName()); 
 		
-	}
+	}*/
 
 	
 	

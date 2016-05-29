@@ -17,7 +17,7 @@ public class Competition {
 	// The list of competitors is not given (new competition)
 	
 	public Competition(String name, String sport, MyCalendar endDate) throws BadParametersException, ExistingCompetitionException, SQLException {
-		this.id = CompetitionDAO.getIdMax(); 
+		this.id = CompetitionDAO.getIdMax()+1; 
 		this.setName(name);
 		this.sport = sport;
 		this.endDate = endDate;
@@ -66,6 +66,9 @@ public class Competition {
 		return id;
 	}
 	
+	public MyCalendar getendDate(){
+		return this.endDate;
+	}
 	
 	public void setName(String name) throws BadParametersException {
 		if (!Utilitary.isValidName(name)) { throw new BadParametersException("invalid name");}
