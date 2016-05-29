@@ -17,7 +17,7 @@ public class Competition_ResultsDAO {
 		
 	}
 	
-	public void persist(Competition_Results CompetitionResults) throws SQLException {
+	public static void persist(Competition_Results CompetitionResults) throws SQLException {
 		String request;
 		request = "insert into competition_results(id_comp,podium1,podium2,podium3)  values (" +
 				 +CompetitionResults.getCompetition()+

@@ -32,7 +32,7 @@ public class SubscriberTest {
 	
 	
 	}
-/*
+
 	@Test
 	public void testGetFirstName() throws BadParametersException {
 	Subscriber subscriber = new Subscriber("Champ","el mahfoudi","saad", MyCalendar.fromString("1994,04,23"));
@@ -249,6 +249,6 @@ public class SubscriberTest {
 		int id=subscriber1.getSubscriber_id();
 		Subscriber subscriber2 =Subscriber.getSubscriberById(id);
 		assertTrue(subscriber1.equals(subscriber2));
-	}*/
+	}
 
 }

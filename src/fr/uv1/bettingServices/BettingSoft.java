@@ -14,22 +14,6 @@ public class BettingSoft {
 
 	private String managerPassword;
 	private ArrayList<Competitor> competitors;
-<<<<<<< HEAD
-	
-	public BettingSoft(String managerPassword){
-		setmanagerPassword(managerPassword);
-		competitors = new ArrayList<Competitor>();
-	}
-  
-// -- LOT 3------------------------------------------------------
-	public void setmanagerPassword(String managerPassword){
-		this.managerPassword = managerPassword;
-	} 
-		
-	public String getmanagerPassword(){
-		return this.managerPassword;
-	}
-=======
 
 	public BettingSoft(String managerPassword) {
 		this.managerPassword = managerPassword;
@@ -88,52 +72,6 @@ public class BettingSoft {
 					List<Bet> listBets = consultBetsCompetitionB(competition); 
 					List<Bet> winningBets = new ArrayList<Bet>();
 					List<Bet> losingBets = new ArrayList<Bet>();
->>>>>>> e458eb618ff9dc90dc3eaded30b54bc455a0d45f
-	
-	public void authenticateMngr(String managerPassword) throws AuthenticationException {
-
-		if (managerPassword == null)
-			throw new AuthenticationException("Enter a manager password");
-		if (!this.managerPassword.equals(managerPassword))
-			throw new AuthenticationException("Incorrect password ");		
-	}
-	
-	public void settleWinner(String competition, 
-							 Competitor winner, 
-							 String managerPwd) throws AuthenticationException,
-													   ExistingCompetitionException,
-													   CompetitionException,
-													   BadParametersException,
-													   SQLException,
-													   NotATeamException,
-													   ExistingCompetitorException,
-													   ExistingSubscriberException   {	
-			
-	       // First we authenticate the manager
-			this.authenticateMngr(managerPwd);
-			
-			//Check if all the parameters are valid
-			// - competition
-			Competition competition_object = getCompetitionByName(competition);
-			if(competition_object == null)
-				throw new ExistingCompetitionException("The competition named does not exist");
-			// - winner
-			
-			 if(!competition_object.checkCompetitor(winner))
-			 	throw new CompetitionException("Winner doesn't compete in the named competition ");
-	          		 
-			//If the competition is closed we credit all the winning bettors.
-			if(!competition_object.isClosed()) {
-				throw new CompetitionException("Competition still running");}
-			else {
-				long total = 0 ;	    
-				int totalwinner = 0;
-				// Getting the list of bettors on the competition
-				List<Bet> listBets = consultBetsCompetitionB(competition); 
-				List<Bet> winningBets = new ArrayList<Bet>();
-				List<Bet> losingBets = new ArrayList<Bet>();
-
-<<<<<<< HEAD
 				for(int i=0; i<listBets.size(); i++) {
 					total = total + listBets.get(i).getBettorBet();
 					if (listBets.get(i).getfirst().getId() == (winner.getId())) {
@@ -146,23 +84,7 @@ public class BettingSoft {
 				}
 				if(totalwinner !=0){
 				//Debit the losers
-					for(int i=0; i<losingBets.size(); i++) {
-=======
-		public void settlePodium(String competition, 
-								 Competitor winner, 
-								 Competitor second, 
-								 Competitor third, 
-								 String managerPwd)	 throws AuthenticationException,
-													 ExistingCompetitionException,
-													 CompetitionException,
-									 			     BadParametersException,
-									 			     SQLException,
-									 			     NotATeamException,
-									 			     ExistingCompetitorException,
-									 			     ExistingSubscriberException, 
-									 			     SubscriberException {	
->>>>>>> e458eb618ff9dc90dc3eaded30b54bc455a0d45f
-						
+					for(int i=0; i<losingBets.size(); i++) {						
 						debitSubscriber(losingBets.get(i).getBettor().getUserName(), 
 												   losingBets.get(i).getBettorBet(), 
 												    managerPwd); 
@@ -192,7 +114,8 @@ public class BettingSoft {
 								 			     SQLException,
 								 			     NotATeamException,
 								 			     ExistingCompetitorException,
-								 			     ExistingSubscriberException {	
+								 			     ExistingSubscriberException,
+												 SubscriberException {	
 					
 			
 			 // First we authenticate the manager
@@ -330,7 +253,7 @@ public class BettingSoft {
 			
 			authenticateMngr(managerPwd);
 			Team newCompetitor = new Team(name,"");	
-return newCompetitor;
+			return newCompetitor;
 }
 		
 // -- LOT 2--------------------------------------------------------
@@ -649,7 +572,8 @@ return newCompetitor;
 	public ArrayList<String> infosSubscriber(String username,String pwdSubs) throws BadParametersException, 
 																					AuthenticationException, 
 																					ExistingCompetitorException, 
-																					ExistingCompetitionException {
+																					ExistingCompetitionException,
+																					SubscriberException {
 		Subscriber.authenticateSubscriber(username, pwdSubs);
 		Subscriber subscriber=Subscriber.getSubscriberByUsername(username);
 		ArrayList<String> result = new ArrayList<String>();

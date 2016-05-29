@@ -1,14 +1,15 @@
 package fr.uv1.competition;
 
-import fr.uv1.competition.Competition_Results;
+
+import fr.uv1.competition.*;
 import fr.uv1.bettingServices.*;
 
-import org.junit.Before
+import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 
-public class Competition_Results {
+public class Competition_Results_Test {
 	
 	private Participation p1;
 	private Participation p2;
